@@ -20,6 +20,65 @@
 # * Save responses via email or database
 # * Display advertising via iframes
 
-exports.module = {
+# Question Types
+# ==============
+# * multiple (checkboxes)
+# * select (radio button)
+# * sentence (single line)
+# * paragraph (multi-line)
+# * email (validation)
 
+
+exports.module = {
+  owner: {
+    name: "Joe Random User"
+    email: "joe@self-service-kiosk.com"
+  }
+  ads: [
+    {kind: "video", name: "Acuvue", url: "http://youtu.be/Dg81rnLYZys" }
+    {kind: "text", name: "Johnson & Johnson"}
+  ]
+  background_color: "blue"
+  font_color: "white"
+  font_family: "Optima"
+
+  timeout: 300 # how many seconds until it reverts to home screen
+
+  home: {
+    title: "FREE Vision Check"
+    description: "
+    Plus
+      Health Tips
+        Symptoms
+          Conditions
+            Valuable Coupons
+    " # format with Markdown
+    select: "Tap Anywhere To Begin"
+  }
+  questions: {
+    sex: {
+      title: "Gender"
+      why: "This helps us better estimate your health risks"
+      select: {M: "Male", F: "Female", other: "Other"}
+    }
+    dry_eyes: {
+      title: "Do you have dry eyes?"
+      description: "Do your eyes itch?  Do they have redness?"
+      why: "This helps us better estimate your health risks"
+      select: {yes: "Yes", no: "No", other: "Not Sure"}
+    }
+    dry_eyes_duration: {
+      when: {dry_eyes: 'yes'}
+      title: "How long have you had dry eyes?"
+      description: "Do your eyes itch?  Do they have redness?"
+      why: "This helps us better estimate your health risks"
+      select: {
+        m6:"6 months or less"
+        m12: "1 year"
+        m24: "Longer"
+        other: "Not sure"
+      }
+    }
+  # result = {sex: 'M', dry_yes: 'yes', dry_eyes_duration: 'm12'}
+  }
 }
