@@ -8,4 +8,4 @@ We plan to offer kiosk creation and management as a service at http://www.self-s
 
 Our dream is to become the [Wordpress.com][http://wordpress.com] of kiosk software, enabling users to create and maintain a kiosk as easily and reliably as a blog.
 
-The Self Service Kiosk is the second product of [The Swan Factory](www.theswanfactory.com), inspired by our earlier work on the [Hour of NODE](hourofnode.org).
+The Self Service Kiosk is the second product of [The Swan Factory](http://www.theswanfactory.com), inspired by our earlier work on the [Hour of NODE](http://hourofnode.org).
