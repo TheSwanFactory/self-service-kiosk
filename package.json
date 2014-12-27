@@ -1,0 +1,28 @@
+{
+  "name": "self-service-kiosk",
+  "version": "0.1.0",
+  "description": "Opening up kiosk creation to everyone",
+  "main": "index.js",
+  "dependencies": {
+    "gulp": "^3.8.10"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TheSwanFactory/self-service-kiosk.git"
+  },
+  "keywords": [
+    "kiosk",
+    "self-serve",
+    "node"
+  ],
+  "author": "The Swan Factory, Inc.",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/TheSwanFactory/self-service-kiosk/issues"
+  },
+  "homepage": "https://github.com/TheSwanFactory/self-service-kiosk"
+}
