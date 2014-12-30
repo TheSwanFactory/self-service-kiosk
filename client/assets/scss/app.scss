@@ -1,0 +1,92 @@
+@import "settings";
+@import "foundation";
+@import "font-awesome";
+
+// Extra button styles
+.button {
+  &.round { border-radius: 1em; }
+
+  // Sizes
+  &.xlarge  { @include button-size(xlarge); }
+  &.xxlarge { @include button-size(xxlarge); }
+
+  // Colors
+  &.info { @include button-style($info-color); }
+
+  &.hollow {
+    &.info { @include button-style($info-color, $style: hollow); }
+  }
+}
+
+// Base styles
+
+ul, ol { display: inline-block; }
+
+.header {
+  @extend .text-center;
+
+  > .grid-block {
+    padding:          $global-padding;
+    background-color: $gray-light;
+  }
+
+  .why {
+    margin: 0;
+  }
+}
+
+.body {
+  @extend .text-center;
+  @include grid-block($orientation: vertical, $wrap: true, $align: center);
+
+  .answer {
+    @extend .button;
+    @extend .button.xxlarge;
+  }
+}
+
+.navigation {
+  background-color: $gray;
+  padding-top:      $global-padding;
+  @extend           .text-center;
+
+  .start-over {
+    @include grid-content($size: 12, $order: 2);
+
+    @include breakpoint(medium) {
+      @include grid-order(1);
+      @include grid-size(3);
+    }
+
+    a {
+      @extend .button;
+      @extend .button.hollow;
+    }
+  }
+
+  .change-page {
+    @include grid-content($size: 12, $order: 1);
+
+    @include breakpoint(medium) {
+      @include grid-order(2);
+      @include grid-size(6);
+    }
+
+    a {
+      @extend .button;
+      @extend .button.secondary;
+
+      &.next {
+        @extend .button.success;
+      }
+    }
+  }
+}
+
+.footer {
+  @extend .text-center;
+
+  background-color: $gray;
+
+  padding-bottom: $global-padding;
+}

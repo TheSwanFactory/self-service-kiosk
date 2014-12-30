@@ -1,0 +1,26 @@
+{
+  "name": "self-service-kiosk",
+  "version": "0.1.0",
+  "homepage": "https://github.com/theswanfactory/self-service-kiosk",
+  "private": true,
+  "authors": [
+    "The Swan Factory, Inc."
+  ],
+  "description": "Opening up kiosk creation to everyone",
+  "main": "index.js",
+  "keywords": [
+    "kiosk"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "foundation-apps": "~1.0.2",
+    "font-awesome": "~4.2.0"
+  }
+}
