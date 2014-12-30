@@ -36,34 +36,34 @@
 
 // Change any value in this map from "true" to "false" to disable that component's CSS class output. You'll still be able to use the component's mixins, but none of our pre-written classes will be in your CSS.
 
-// $include-css: (
-//   accordion: true,
-//   action-sheet: true,
-//   block-list: true,
-//   button: true,
-//   button-group: true,
-//   card: true,
-//   coloring: true,
-//   extras: true,
-//   forms: true,
-//   grid: true,
-//   iconic: true,
-//   label: true,
-//   badge: true,
-//   list: true,
-//   menu-bar: true,
-//   modal: true,
-//   motion: true,
-//   notification: true,
-//   off-canvas: true,
-//   panel: true,
-//   popup: true,
-//   switch: true,
-//   tabs: true,
-//   title-bar: true,
-//   typography: true,
-//   utilities: true,
-// ); 
+$include-css: (
+  accordion: false,
+  action-sheet: false,
+  block-list: true,
+  button: true,
+  button-group: true,
+  card: true,
+  coloring: true,
+  extras: true,
+  forms: true,
+  grid: true,
+  iconic: true,
+  label: true,
+  badge: true,
+  list: true,
+  menu-bar: true,
+  modal: true,
+  motion: true,
+  notification: true,
+  off-canvas: true,
+  panel: true,
+  popup: true,
+  switch: true,
+  tabs: true,
+  title-bar: true,
+  typography: true,
+  utilities: true,
+); 
 
 // 2. Global Styles
 // - - - - - - - - - - - - - - -
@@ -90,7 +90,7 @@
 // $font-weight-bold: bold;
 
 // We use these to control various global styles
-// $body-background: #fff;
+$body-background: #FCFCFC;
 // $body-font-color: #222;
 // $body-font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
 // $body-font-weight: $font-weight-normal;
@@ -98,7 +98,7 @@
 // $body-antialiased: true;
 
 // Application Colors
-// $primary-color: #00558b;
+$primary-color: #2980B9;
 // $secondary-color: #f1f1f1;
 // $alert-color: #F04124;
 // $info-color: #A0D3E8;
@@ -307,13 +307,15 @@
 // $button-style: solid;
 // $button-background: $primary-color;
 // $button-color: auto;
-// $button-radius: 0;
-// $button-sizes: (
-//   tiny: 0.7,
-//   small: 0.8,
-//   medium: 1,
-//   large: 1.3,
-// );
+$button-radius: 0.3em;
+$button-sizes: (
+  tiny: 0.7,
+  small: 0.8,
+  medium: 1,
+  large: 1.3,
+  xlarge: 1.6,
+  xxlarge: 2
+);
 // $button-font-size: 0.9rem;
 // $button-opacity-disabled: 0.5;
 // $button-tag-selector: true; 

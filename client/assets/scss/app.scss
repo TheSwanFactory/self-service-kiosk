@@ -2,16 +2,58 @@
 @import "foundation";
 @import "font-awesome";
 
-.grid-block {
-  background-color: #dee;
-  border: 1px solid #eee;
+.button {
+  &.round {
+    border-radius: 1em;
+  }
+
+  &.xlarge  { @include button-size(xlarge); }
+  &.xxlarge { @include button-size(xxlarge); }
 }
 
-.question {
+.header {
   @extend .text-center;
-  @extend h1;
+
+  margin: $global-padding;
 }
 
-.button.round {
-  border-radius: 100%;
+.body {
+  @extend .text-center;
+
+  .answer {
+    @extend .button;
+    @extend .button.xxlarge;
+  }
+}
+
+.navigation {
+  button {
+    @extend .button;
+    @extend .button.secondary;
+  }
+
+  .start-over {
+    @include grid-content($size: 12, $order: 2);
+
+    @include breakpoint(medium) {
+      @include grid-order(1);
+      @include grid-size(3);
+    }
+  }
+
+  .change-page {
+    @extend .text-center;
+    @include grid-content($size: 12, $order: 1);
+
+    @include breakpoint(medium) {
+      @include grid-order(2);
+      @include grid-size(6);
+    }
+  }
+}
+
+.footer {
+  @extend .text-center;
+
+  margin: $global-padding;
 }
