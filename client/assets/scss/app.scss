@@ -2,19 +2,29 @@
 @import "foundation";
 @import "font-awesome";
 
+// Extra button styles
 .button {
-  &.round {
-    border-radius: 1em;
-  }
+  &.round { border-radius: 1em; }
 
+  // Sizes
   &.xlarge  { @include button-size(xlarge); }
   &.xxlarge { @include button-size(xxlarge); }
+
+  // Colors
+  &.info { @include button-style($info-color); }
+
+  &.hollow {
+    &.info { @include button-style($info-color, $style: hollow); }
+  }
 }
 
 .header {
   @extend .text-center;
 
-  margin: $global-padding;
+  .grid-block {
+    padding:          $global-padding;
+    background-color: $gray-light;
+  }
 }
 
 .body {
@@ -27,9 +37,14 @@
 }
 
 .navigation {
+  background-color: $gray;
+  padding-top:      $global-padding;
+
   button {
     @extend .button;
     @extend .button.secondary;
+
+    &.next { @extend .button.success; }
   }
 
   .start-over {
@@ -39,6 +54,8 @@
       @include grid-order(1);
       @include grid-size(3);
     }
+
+    button { @extend .button.hollow; }
   }
 
   .change-page {
@@ -55,5 +72,7 @@
 .footer {
   @extend .text-center;
 
-  margin: $global-padding;
+  background-color: $gray;
+
+  padding-bottom: $global-padding;
 }
