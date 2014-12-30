@@ -18,6 +18,10 @@
   }
 }
 
+// Base styles
+
+ul, ol { display: inline-block; }
+
 .header {
   @extend .text-center;
 
