@@ -33,6 +33,7 @@ ul, ol { display: inline-block; }
 
 .body {
   @extend .text-center;
+  @include grid-block($orientation: vertical, $wrap: true, $align: center);
 
   .answer {
     @extend .button;
@@ -44,13 +45,6 @@ ul, ol { display: inline-block; }
   background-color: $gray;
   padding-top:      $global-padding;
 
-  button {
-    @extend .button;
-    @extend .button.secondary;
-
-    &.next { @extend .button.success; }
-  }
-
   .start-over {
     @include grid-content($size: 12, $order: 2);
 
@@ -59,7 +53,10 @@ ul, ol { display: inline-block; }
       @include grid-size(3);
     }
 
-    button { @extend .button.hollow; }
+    a {
+      @extend .button;
+      @extend .button.hollow;
+    }
   }
 
   .change-page {
@@ -69,6 +66,15 @@ ul, ol { display: inline-block; }
     @include breakpoint(medium) {
       @include grid-order(2);
       @include grid-size(6);
+    }
+
+    a {
+      @extend .button;
+      @extend .button.secondary;
+
+      &.next {
+        @extend .button.success;
+      }
     }
   }
 }
