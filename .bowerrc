@@ -1,0 +1,6 @@
+{
+  "directory": "bower_components",
+  "scripts": {
+    "postinstall": "rm -rf bower_components/angular && rm -rf bower_components/angular-animate && rm -rf bower_components/angular-touch && rm -rf bower_components/ui-router"
+  }
+}

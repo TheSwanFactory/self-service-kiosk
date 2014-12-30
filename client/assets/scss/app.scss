@@ -1,0 +1,17 @@
+@import "settings";
+@import "foundation";
+@import "font-awesome";
+
+.grid-block {
+  background-color: #dee;
+  border: 1px solid #eee;
+}
+
+.question {
+  @extend .text-center;
+  @extend h1;
+}
+
+.button.round {
+  border-radius: 100%;
+}
