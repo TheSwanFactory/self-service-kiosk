@@ -138,12 +138,13 @@ gulp.task('build', function() {
 });
 
 // Default task: builds your app, starts a server, and recompiles assets when they change
-gulp.task('default', ['build', 'server:start'], function() {
+gulp.task('default', ['test', 'build', 'server:start'], function() {
   // Watch Sass
   gulp.watch(['./client/assets/scss/**/*', './scss/**/*'], ['sass']);
 
-  // Watch JavaScript
-  gulp.watch(['./client/assets/coffee/**/*', './coffee/**/*'], ['uglify']);
+  // Watch CoffeeScript
+  gulp.watch(['./client/assets/coffee/**/*', './coffee/**/*'], ['test', 'uglify']);
+  gulp.watch(['./test/**/*.coffee'], ['test']);
 
   // Watch static files
   gulp.watch(['./client/**/*.*', '!./client/templates/**/*.*', '!./client/assets/{scss,js}/**/*.*'], ['copy']);
