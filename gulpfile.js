@@ -55,7 +55,8 @@ gulp.task('copy', function() {
   gulp.src(dirs, {
     base: './client/'
   })
-    .pipe(gulp.dest('./build'));
+    .pipe(gulp.dest('./build'))
+    .pipe(connect.reload());
 });
 
 // Compiles Sass
@@ -73,7 +74,8 @@ gulp.task('sass', function() {
     .pipe(autoprefixer({
       browsers: ['last 2 versions', 'ie 10']
     }))
-    .pipe(gulp.dest('./build/assets/css/'));
+    .pipe(gulp.dest('./build/assets/css/'))
+    .pipe(connect.reload());
 });
 
 gulp.task('icons', function() {
@@ -105,13 +107,15 @@ gulp.task('uglify', function() {
     }))
     .pipe(concat('app.js'))
     .pipe(gulp.dest('./build/assets/js/'))
+    .pipe(connect.reload())
   ;
 });
 
 // Starts a test server, which you can view at http://localhost:8080
 gulp.task('server:start', function() {
   connect.server({
-    root: './build'
+    root:       './build',
+    livereload: true
   });
 });
 
