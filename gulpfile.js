@@ -14,7 +14,8 @@ var gulp           = require('gulp'),
     uglify         = require('gulp-uglify'),
     concat         = require('gulp-concat'),
     connect        = require('gulp-connect'),
-    path           = require('path');
+    path           = require('path'),
+    coffee         = require('gulp-coffee');
 
 // 2. SETTINGS VARIABLES
 // - - - - - - - - - - - - - - -
@@ -31,9 +32,10 @@ var foundationJS = [
   'bower_components/viewport-units-buggyfill/viewport-units-buggyfill.js',
   'bower_components/tether/tether.js',
 ];
-// These files are for your app's JavaScript
-var appJS = [
-  'client/assets/js/app.js'
+
+var appCoffee = [
+  'client/assets/coffee/app.coffee',
+  'client/assets/coffee/**/*.coffee'
 ];
 
 // 3. TASKS
@@ -48,7 +50,7 @@ gulp.task('clean', function(cb) {
 gulp.task('copy', function() {
   var dirs = [
     './client/**/*.*',
-    '!./client/assets/{scss,js}/**/*.*'
+    '!./client/assets/{scss,coffee}/**/*.*'
   ];
 
   // Everything in the client folder except templates, Sass, and JS
@@ -98,7 +100,9 @@ gulp.task('uglify', function() {
   ;
 
   // App JavaScript
-  return gulp.src(appJS)
+  return gulp.src(appCoffee)
+    .pipe(coffee())
+    .on('error', console.log)
     .pipe(uglify({
       beautify: true,
       mangle: false
@@ -132,7 +136,7 @@ gulp.task('default', ['build', 'server:start'], function() {
   gulp.watch(['./client/assets/scss/**/*', './scss/**/*'], ['sass']);
 
   // Watch JavaScript
-  gulp.watch(['./client/assets/js/**/*', './js/**/*'], ['uglify']);
+  gulp.watch(['./client/assets/coffee/**/*', './coffee/**/*'], ['uglify']);
 
   // Watch static files
   gulp.watch(['./client/**/*.*', '!./client/templates/**/*.*', '!./client/assets/{scss,js}/**/*.*'], ['copy']);
