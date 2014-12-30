@@ -6,16 +6,18 @@
 // 1. LIBRARIES
 // - - - - - - - - - - - - - - -
 
-var gulp           = require('gulp'),
-    rimraf         = require('rimraf'),
-    runSequence    = require('run-sequence'),
-    autoprefixer   = require('gulp-autoprefixer'),
-    sass           = require('gulp-ruby-sass'),
-    uglify         = require('gulp-uglify'),
-    concat         = require('gulp-concat'),
-    connect        = require('gulp-connect'),
-    path           = require('path'),
-    coffee         = require('gulp-coffee');
+var gulp         = require('gulp'),
+    rimraf       = require('rimraf'),
+    runSequence  = require('run-sequence'),
+    autoprefixer = require('gulp-autoprefixer'),
+    sass         = require('gulp-ruby-sass'),
+    uglify       = require('gulp-uglify'),
+    concat       = require('gulp-concat'),
+    connect      = require('gulp-connect'),
+    path         = require('path'),
+    coffeescript = require('coffee-script/register'),
+    coffee       = require('gulp-coffee'),
+    mocha        = require('gulp-mocha');
 
 // 2. SETTINGS VARIABLES
 // - - - - - - - - - - - - - - -
@@ -101,7 +103,7 @@ gulp.task('uglify', function() {
 
   // App JavaScript
   return gulp.src(appCoffee)
-    .pipe(coffee())
+    .pipe(coffee({bare: true}))
     .on('error', console.log)
     .pipe(uglify({
       beautify: true,
@@ -113,6 +115,11 @@ gulp.task('uglify', function() {
     .pipe(gulp.dest('./build/assets/js/'))
     .pipe(connect.reload())
   ;
+});
+
+gulp.task('test', function() {
+  return gulp.src('./test/test.coffee', {read: false})
+    .pipe(mocha());
 });
 
 // Starts a test server, which you can view at http://localhost:8080

@@ -1,8 +1,9 @@
 expect = require('chai').expect
-app    = require('../client/assets/coffee/app')
-layout = require('../client/assets/coffee/layout')
+require('../client/assets/coffee/app')
+require('../client/assets/coffee/layout')
 
 describe 'Layout', ->
+  layout = SwanKiosk.Layout
   describe '.build()', ->
     built = layout.build tag: 'div', contents: 'hello'
 
