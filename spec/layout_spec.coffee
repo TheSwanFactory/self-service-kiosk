@@ -1,9 +1,3 @@
-expect = chai.expect
-
-describe 'Dependencies', ->
-  it 'has loDash', ->
-    expect(typeof _).to.not.eq 'undefined'
-
 describe 'Layout', ->
   layout  = SwanKiosk.Layout
 
@@ -105,4 +99,3 @@ describe 'Layout', ->
       expect(built).to.eq(
         'max-width: 500px;background-color: white;min-width: 10px;'
       )
-

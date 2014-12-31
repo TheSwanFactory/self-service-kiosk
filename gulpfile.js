@@ -41,6 +41,11 @@ var appCoffee = [
   'client/assets/coffee/**/*.coffee'
 ];
 
+var specCoffee = [
+  'spec/spec.coffee',
+  'spec/**/*.coffee'
+];
+
 // 3. TASKS
 // - - - - - - - - - - - - - - -
 
@@ -119,14 +124,14 @@ gulp.task('uglify', function() {
 });
 
 gulp.task('test:build', function() {
-  return gulp.src(['./test/test.coffee', './test/**/*.coffee'])
+  return gulp.src(specCoffee)
     .pipe(coffee({bare: true}))
-    .pipe(concat('test.js'))
-    .pipe(gulp.dest('./build/test/'));
+    .pipe(concat('spec.js'))
+    .pipe(gulp.dest('./build/spec/'));
 });
 
 gulp.task('test', ['test:build'], function() {
-  return gulp.src('./test/runner.html')
+  return gulp.src('./spec/runner.html')
     .pipe(mochaPhantomJS());
 });
 
@@ -152,7 +157,7 @@ gulp.task('default', ['build', 'server:start'], function() {
 
   // Watch CoffeeScript
   gulp.watch(['./client/assets/coffee/**/*', './coffee/**/*'], ['uglify', 'test']);
-  gulp.watch(['./test/**/*.coffee'], ['test']);
+  gulp.watch(specCoffee, ['test']);
 
   // Watch static files
   gulp.watch(['./client/**/*.*', '!./client/templates/**/*.*', '!./client/assets/{scss,js}/**/*.*'], ['copy']);
