@@ -20,3 +20,12 @@ describe 'Layout', ->
 
         it 'adds raw string', ->
           expect(built).to.contain('content')
+
+      describe 'array', ->
+        before -> contents = [{tag: 'p', contents: 'hello'}]
+
+        it 'renders multiple items', ->
+          expect(built).to.contain('<div>')
+          expect(built).to.contain('<p>')
+          expect(built).to.contain('hello')
+
