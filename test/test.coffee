@@ -4,44 +4,73 @@ describe 'Dependencies', ->
   it 'has loDash', ->
     expect(typeof _).to.not.eq 'undefined'
 
-  it 'has jQuery', ->
-    expect($).to.eq jQuery
-
 describe 'Layout', ->
-  layout   = SwanKiosk.Layout
-  built    = ''
-  contents = ''
-  options  = {}
+  layout  = SwanKiosk.Layout
+  built   = ''
+  options = {}
 
   describe '.build()', ->
-    beforeEach ->
-      built = layout.build(_.extend(tag: 'div', contents: contents, options))
+    it 'creates a tag with contents', ->
+      built = layout.build tag: 'div', contents: 'hello'
+      expect(built).to.eq('<div>hello</div>')
 
-    it 'creates a tag', ->
-      expect(built).to.match(/^\<div\>/)
-      expect(built).to.match(/\<\/div\>$/)
+  describe '.buildContents()', ->
+    options = {}
+    beforeEach -> built = layout.buildContents(options)
 
-    describe 'contents', ->
-      describe 'string', ->
-        before -> contents = '<b>content</b>'
+    describe 'string', ->
+      before -> options.contents = '<b>content</b>'
 
-        it 'adds string', ->
-          expect(built).to.contain 'content'
+      it 'adds string', ->
+        expect(built).to.contain 'content'
 
-        it 'escapes string', ->
-          expect(built).to.not.contain('<b>')
+      it 'escapes string', ->
+        expect(built).to.not.contain('<b>')
 
-        describe 'rawHtml', ->
-          before -> options = {rawHtml: true}
+      describe 'rawHtml', ->
+        before -> options.rawHtml = true
 
-          it 'does not escape', ->
-            expect(built).to.contain('<b>')
+        it 'does not escape', ->
+          expect(built).to.contain('<b>')
 
-      describe 'array', ->
-        before -> contents = [{tag: 'p', contents: 'hello'}]
+    describe 'array', ->
+      before -> options.contents = [{tag: 'p', contents: 'hello'}]
 
-        it 'renders multiple items', ->
-          expect(built).to.contain('<div>')
-          expect(built).to.contain('<p>')
-          expect(built).to.contain('hello')
+      it 'renders multiple items', ->
+        expect(built).to.eq '<p>hello</p>'
+
+  describe '.buildAttributes()', ->
+    options = {}
+    beforeEach -> built = layout.buildAttributes(options)
+
+    describe 'options', ->
+      describe 'special attributes', ->
+        before ->
+          layout.specialAttributes.forEach (option) ->
+            options[option] = 'value'
+
+        it "does not set special attributes as HTML attributes", ->
+          expect(built).to.not.include("#{option}=\"value\"")
+
+      describe 'attributes', ->
+        describe 'simple string', ->
+          before -> options = {class: 'classy'}
+
+          it 'sets properly', ->
+            expect(built).to.include('class="classy"')
+
+        describe 'style', ->
+          before -> options = {style: {max_width: '500px'}}
+
+          it 'sets style', ->
+            expect(built).to.include('style="max-width:')
+
+  describe '.buildAttributes()', ->
+    built   = ''
+    options = {}
+
+    beforeEach -> built = layout.buildAttributes options
+
+    describe 'specialAttributes', ->
+
 
