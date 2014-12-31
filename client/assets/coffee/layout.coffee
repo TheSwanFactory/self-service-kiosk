@@ -1,7 +1,8 @@
 class SwanKiosk.Layout
+  @specialAttributes = ['contents', 'tag', 'rawHtml']
   # Top level function for turning an object into HTML
-  @build: (layout) ->
-    @buildTag layout
+  @build: (@layout) ->
+    @buildTag @layout
 
   @buildContents: (options) ->
     contents = options.contents
@@ -16,6 +17,19 @@ class SwanKiosk.Layout
     array.map(@buildTag, this).join('')
 
   @buildTag: (options) ->
-    "<#{options.tag}>#{@buildContents options}</#{options.tag}>"
+    openTag  = @buildOpenTag options
+    contents = @buildContents options
+    closeTag = @buildCloseTag options
+    "#{openTag}#{contents}#{closeTag}"
 
+  @buildOpenTag: (options) ->
+    attributes = @buildAttributes options
+    attributes = ' ' + attributes if attributes.length
+    "<#{options.tag}#{attributes}>"
+
+  @buildAttributes: (options) ->
+    attributes = _.difference Object.keys(options), @specialAttributes
+
+  @buildCloseTag: (options) ->
+    "</#{options.tag}>"
 
