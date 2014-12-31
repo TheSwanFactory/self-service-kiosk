@@ -29,6 +29,7 @@ class SwanKiosk.Layout
 
   @buildAttributes: (options) ->
     attributes = _.difference Object.keys(options), @specialAttributes
+    attributes.join ' '
 
   @buildCloseTag: (options) ->
     "</#{options.tag}>"

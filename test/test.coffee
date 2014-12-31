@@ -50,7 +50,7 @@ describe 'Layout', ->
             options[option] = 'value'
 
         it "does not set special attributes as HTML attributes", ->
-          expect(built).to.not.include("#{option}=\"value\"")
+          expect(built).to.eq ''
 
       describe 'attributes', ->
         describe 'simple string', ->
