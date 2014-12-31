@@ -1,18 +1,21 @@
 class SwanKiosk.Layout
   # Top level function for turning an object into HTML
   @build: (layout) ->
-    @recursiveBuild layout
-
-  @recursiveBuild: (layout) ->
-    if Array.isArray(layout.contents)
-      layout.contents = @buildArray layout.contents
-
     @buildTag layout
 
+  @buildContents: (options) ->
+    contents = options.contents
+    if Array.isArray(contents)
+      contents = @buildArray contents
+    else
+      contents = _.escape(contents) unless options.rawHtml
+
+    contents
+
   @buildArray: (array) ->
-    array.map(@recursiveBuild, this).join('')
+    array.map(@buildTag, this).join('')
 
   @buildTag: (options) ->
-    "<#{options.tag}>#{options.contents}</#{options.tag}>"
+    "<#{options.tag}>#{@buildContents options}</#{options.tag}>"
 
 
