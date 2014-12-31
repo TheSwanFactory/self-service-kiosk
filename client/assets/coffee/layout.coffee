@@ -28,8 +28,13 @@ class SwanKiosk.Layout
     "<#{options.tag}#{attributes}>"
 
   @buildAttributes: (options) ->
-    attributes = _.difference Object.keys(options), @specialAttributes
-    attributes.join ' '
+    _(Object.keys options)
+      .difference(@specialAttributes) # remove specialAttributes
+      .map((attribute) ->
+        key   = SwanKiosk.Utils.dasherize attribute
+        value = options[attribute]
+        "#{key}=\"#{value}\""
+      ).join ' '
 
   @buildCloseTag: (options) ->
     "</#{options.tag}>"

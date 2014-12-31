@@ -53,24 +53,20 @@ describe 'Layout', ->
           expect(built).to.eq ''
 
       describe 'attributes', ->
-        describe 'simple string', ->
-          before -> options = {class: 'classy'}
+        describe 'simple strings', ->
+          before -> options = {class: 'classy', id: 'object'}
 
           it 'sets properly', ->
-            expect(built).to.include('class="classy"')
+            expect(built).to.include('class="classy" id="object"')
+
+        describe 'data', ->
+          before -> options = {data_title: 'title'}
+
+          it 'sets properly', ->
+            expect(built).to.include 'data-title="title"'
 
         describe 'style', ->
           before -> options = {style: {max_width: '500px'}}
 
           it 'sets style', ->
             expect(built).to.include('style="max-width:')
-
-  describe '.buildAttributes()', ->
-    built   = ''
-    options = {}
-
-    beforeEach -> built = layout.buildAttributes options
-
-    describe 'specialAttributes', ->
-
-
