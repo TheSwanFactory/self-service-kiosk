@@ -126,7 +126,7 @@ gulp.task('test:build', function() {
     .pipe(gulp.dest('./build/test/'));
 });
 
-gulp.task('test', ['uglify', 'test:build'], function() {
+gulp.task('test', ['test:build'], function() {
   return gulp.src('./test/runner.html')
     .pipe(mochaPhantomJS());
 });
@@ -152,7 +152,7 @@ gulp.task('default', ['build', 'server:start'], function() {
   gulp.watch(['./client/assets/scss/**/*', './scss/**/*'], ['sass']);
 
   // Watch CoffeeScript
-  gulp.watch(['./client/assets/coffee/**/*', './coffee/**/*'], ['test', 'uglify']);
+  gulp.watch(['./client/assets/coffee/**/*', './coffee/**/*'], ['uglify', 'test']);
   gulp.watch(['./test/**/*.coffee'], ['test']);
 
   // Watch static files
