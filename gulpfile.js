@@ -6,18 +6,18 @@
 // 1. LIBRARIES
 // - - - - - - - - - - - - - - -
 
-var gulp         = require('gulp'),
-    rimraf       = require('rimraf'),
-    runSequence  = require('run-sequence'),
-    autoprefixer = require('gulp-autoprefixer'),
-    sass         = require('gulp-ruby-sass'),
-    uglify       = require('gulp-uglify'),
-    concat       = require('gulp-concat'),
-    connect      = require('gulp-connect'),
-    path         = require('path'),
-    coffeescript = require('coffee-script/register'),
-    coffee       = require('gulp-coffee'),
-    mocha        = require('gulp-mocha');
+var gulp           = require('gulp'),
+    rimraf         = require('rimraf'),
+    runSequence    = require('run-sequence'),
+    autoprefixer   = require('gulp-autoprefixer'),
+    sass           = require('gulp-ruby-sass'),
+    uglify         = require('gulp-uglify'),
+    concat         = require('gulp-concat'),
+    connect        = require('gulp-connect'),
+    path           = require('path'),
+    coffeescript   = require('coffee-script/register'),
+    coffee         = require('gulp-coffee'),
+    mochaPhantomJS = require('gulp-mocha-phantomjs');
 
 // 2. SETTINGS VARIABLES
 // - - - - - - - - - - - - - - -
@@ -29,10 +29,11 @@ var sassPaths = [
   'bower_components/font-awesome/scss'
 ];
 // These files include Foundation for Apps and its dependencies
-var foundationJS = [
+var vendorJS = [
   'bower_components/fastclick/lib/fastclick.js',
   'bower_components/viewport-units-buggyfill/viewport-units-buggyfill.js',
   'bower_components/tether/tether.js',
+  'bower_components/lodash/dist/lodash.min.js'
 ];
 
 var appCoffee = [
@@ -89,15 +90,15 @@ gulp.task('icons', function() {
 
 // Compiles and copies the Foundation for Apps JavaScript, as well as your app's custom JS
 gulp.task('uglify', function() {
-  // Foundation JavaScript
-  gulp.src(foundationJS)
+  // Vendor JavaScript
+  gulp.src(vendorJS)
     .pipe(uglify({
       beautify: true,
       mangle: false
     }).on('error', function(e) {
       console.log(e);
     }))
-    .pipe(concat('foundation.js'))
+    .pipe(concat('vendor.js'))
     .pipe(gulp.dest('./build/assets/js/'))
   ;
 
@@ -117,9 +118,16 @@ gulp.task('uglify', function() {
   ;
 });
 
-gulp.task('test', function() {
-  return gulp.src('./test/test.coffee', {read: false})
-    .pipe(mocha());
+gulp.task('test:build', function() {
+  return gulp.src(['./test/test.coffee', './test/**/*.coffee'])
+    .pipe(coffee({bare: true}))
+    .pipe(concat('test.js'))
+    .pipe(gulp.dest('./build/test/'));
+});
+
+gulp.task('test', ['uglify', 'test:build'], function() {
+  return gulp.src('./test/runner.html')
+    .pipe(mochaPhantomJS());
 });
 
 // Starts a test server, which you can view at http://localhost:8080
@@ -138,7 +146,7 @@ gulp.task('build', function() {
 });
 
 // Default task: builds your app, starts a server, and recompiles assets when they change
-gulp.task('default', ['test', 'build', 'server:start'], function() {
+gulp.task('default', ['build', 'server:start'], function() {
   // Watch Sass
   gulp.watch(['./client/assets/scss/**/*', './scss/**/*'], ['sass']);
 
