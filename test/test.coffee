@@ -6,15 +6,16 @@ describe 'Dependencies', ->
 
 describe 'Layout', ->
   layout  = SwanKiosk.Layout
-  built   = ''
-  options = {}
 
   describe '.build()', ->
+    built   = null
+    options = {}
     it 'creates a tag with contents', ->
       built = layout.build tag: 'div', contents: 'hello'
       expect(built).to.eq('<div>hello</div>')
 
   describe '.buildContents()', ->
+    built   = null
     options = {}
     beforeEach -> built = layout.buildContents(options)
 
@@ -40,6 +41,7 @@ describe 'Layout', ->
         expect(built).to.eq '<p>hello</p>'
 
   describe '.buildAttributes()', ->
+    built   = null
     options = {}
     beforeEach -> built = layout.buildAttributes(options)
 
@@ -70,3 +72,37 @@ describe 'Layout', ->
 
           it 'sets style', ->
             expect(built).to.include('style="max-width:')
+
+  describe '.buildSingleAttribute()', ->
+    options =
+      simple: 'string'
+      style:  {max_width: '500px'}
+      json:   {key: 'val'}
+    attribute = null
+    built     = null
+    beforeEach -> built = layout.buildSingleAttribute(options)(attribute)
+
+    describe 'simple string', ->
+      before -> attribute = 'simple'
+
+      it 'builds attribute', ->
+        expect(built).to.eq 'simple="string"'
+
+    describe 'json', ->
+      before -> attribute = 'json'
+
+      it 'builds attribute', ->
+        expect(built).to.eq "json=\"#{JSON.stringify(options.json)}\""
+
+    describe 'style', ->
+
+  describe '.buildStyleAttribute()', ->
+    style = {max_width: '500px', background_color: 'white', 'min-width': '10px'}
+    built = null
+    beforeEach -> built = layout.buildStyleAttribute(style)
+
+    it 'builds attribute', ->
+      expect(built).to.eq(
+        'max-width: 500px;background-color: white;min-width: 10px;'
+      )
+

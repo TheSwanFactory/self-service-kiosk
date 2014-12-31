@@ -6,7 +6,7 @@ class SwanKiosk.Layout
 
   @buildContents: (options) ->
     contents = options.contents
-    if Array.isArray(contents)
+    if _.isArray(contents)
       contents = @buildArray contents
     else
       contents = _.escape(contents) unless options.rawHtml
@@ -30,11 +30,24 @@ class SwanKiosk.Layout
   @buildAttributes: (options) ->
     _(Object.keys options)
       .difference(@specialAttributes) # remove specialAttributes
-      .map((attribute) ->
-        key   = SwanKiosk.Utils.dasherize attribute
-        value = options[attribute]
-        "#{key}=\"#{value}\""
-      ).join ' '
+      .map(@buildSingleAttribute(options), this)
+      .join ' '
+
+  @buildSingleAttribute: (options) ->
+    (attribute) ->
+      key   = SwanKiosk.Utils.dasherize attribute
+      value = options[attribute]
+      if _.isObject value
+        if key == 'style'
+          value = @buildStyleAttribute value
+        else
+          value = JSON.stringify value
+      "#{key}=\"#{value}\""
+
+  @buildStyleAttribute: (style) ->
+    _(style).map((value, key) ->
+      "#{SwanKiosk.Utils.dasherize key}: #{value};"
+    ).join ''
 
   @buildCloseTag: (options) ->
     "</#{options.tag}>"
