@@ -126,6 +126,7 @@ gulp.task('uglify', function() {
 gulp.task('test:build', function() {
   return gulp.src(specCoffee)
     .pipe(coffee({bare: true}))
+    .on('error', console.log)
     .pipe(concat('spec.js'))
     .pipe(gulp.dest('./build/spec/'));
 });

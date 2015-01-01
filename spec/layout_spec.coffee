@@ -1,4 +1,4 @@
-describe 'Layout', ->
+describe 'SwanKiosk.Layout', ->
   layout  = SwanKiosk.Layout
 
   describe '.build()', ->
@@ -7,6 +7,14 @@ describe 'Layout', ->
     it 'creates a tag with contents', ->
       built = layout.build tag: 'div', contents: 'hello'
       expect(built).to.eq('<div>hello</div>')
+
+    it 'creates an empty div with no arguments', ->
+      built = layout.build()
+      expect(built).to.eq '<div></div>'
+
+    it 'creates an empty div with empty arguments', ->
+      built = layout.build {}
+      expect(built).to.eq '<div></div>'
 
   describe '.buildContents()', ->
     built   = null
