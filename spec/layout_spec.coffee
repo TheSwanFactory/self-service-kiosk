@@ -16,6 +16,23 @@ describe 'SwanKiosk.Layout', ->
       built = layout.build {}
       expect(built).to.eq '<div></div>'
 
+  describe '.buildTag()', ->
+    built   = null
+    options = {}
+    beforeEach -> built = layout.buildTag(options)
+
+    describe 'empty', ->
+      before -> options = {}
+
+      it 'creates an empty element', ->
+        expect(built).to.contain '></'
+
+    describe 'no tag', ->
+      before -> options = {contents: 'hello'}
+
+      it 'sets default tag', ->
+        expect(built).to.eq "<#{layout.defaultTag}>hello</#{layout.defaultTag}>"
+
   describe '.buildContents()', ->
     built   = null
     options = {}

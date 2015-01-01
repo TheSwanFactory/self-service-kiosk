@@ -10,10 +10,11 @@ class SwanKiosk.Layout
     layout.tag ?= @defaultTag
 
   @buildTag: (options) ->
+    @setDefaults options
     openTag  = @buildOpenTag options
     contents = @buildContents options
     closeTag = @buildCloseTag options
-    "#{openTag}#{contents}#{closeTag}"
+    openTag + contents + closeTag
 
   @buildOpenTag: (options) ->
     attributes = @buildAttributes options
