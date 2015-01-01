@@ -33,6 +33,12 @@ describe 'SwanKiosk.Layout', ->
       it 'sets default tag', ->
         expect(built).to.eq "<#{layout.defaultTag}>hello</#{layout.defaultTag}>"
 
+    describe 'array', ->
+      before -> options = [{contents: 'hello'}, {contents: 'friend'}]
+
+      it 'builds a set of tags', ->
+        expect(built).to.eq '<div><div>hello</div><div>friend</div></div>'
+
   describe '.buildContents()', ->
     built   = null
     options = {}

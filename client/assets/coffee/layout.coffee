@@ -7,10 +7,13 @@ class SwanKiosk.Layout
     @buildTag layout
 
   @setDefaults: (layout) ->
+    if _.isArray(layout)
+      layout = {contents: layout}
     layout.tag ?= @defaultTag
+    layout
 
   @buildTag: (options) ->
-    @setDefaults options
+    options  = @setDefaults options
     openTag  = @buildOpenTag options
     contents = @buildContents options
     closeTag = @buildCloseTag options
