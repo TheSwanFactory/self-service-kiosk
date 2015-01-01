@@ -39,6 +39,12 @@ describe 'SwanKiosk.Layout', ->
       it 'builds a set of tags', ->
         expect(built).to.eq '<div><div>hello</div><div>friend</div></div>'
 
+    describe 'string', ->
+      before -> options = 'hello'
+
+      it 'builds contents', ->
+        expect(built).to.eq '<div>hello</div>'
+
   describe '.buildContents()', ->
     built   = null
     options = {}

@@ -7,7 +7,7 @@ class SwanKiosk.Layout
     @buildTag layout
 
   @setDefaults: (layout) ->
-    if _.isArray(layout)
+    if _.isArray(layout) or _.isString(layout)
       layout = {contents: layout}
     layout.tag ?= @defaultTag
     layout
