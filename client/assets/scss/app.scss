@@ -24,15 +24,10 @@ ul, ol { display: inline-block; }
 
 .header {
   @extend .text-center;
+  background-color: $gray-light;
+  padding:          $global-padding;
 
-  > .grid-block {
-    padding:          $global-padding;
-    background-color: $gray-light;
-  }
-
-  .why {
-    margin: 0;
-  }
+  .why { margin: 0; }
 }
 
 .body {
