@@ -48,6 +48,8 @@ class SwanKiosk.Layout
 
   @buildContents: (options) ->
     contents = options.contents
+    if _.isPlainObject(contents)
+      contents = [contents]
     if _.isArray(contents)
       contents = @buildArray contents
     else

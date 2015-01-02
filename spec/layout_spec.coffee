@@ -71,6 +71,12 @@ describe 'SwanKiosk.Layout', ->
       it 'renders multiple items', ->
         expect(built).to.eq '<p>hello</p>'
 
+    describe 'object', ->
+      before -> options.contents = {tag: 'p', contents: 'hello'}
+
+      it 'renders the child', ->
+        expect(built).to.eq '<p>hello</p>'
+
   describe '.buildAttributes()', ->
     built   = null
     options = {}
