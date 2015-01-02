@@ -1,4 +1,4 @@
-describe.only 'SwanKiosk.Interpreter', ->
+describe 'SwanKiosk.Interpreter', ->
   interpreter = SwanKiosk.Interpreter
 
   it 'creates an empty json object', ->
