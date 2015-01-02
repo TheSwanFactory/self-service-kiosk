@@ -1,1 +1,3 @@
-SwanKiosk = {}
+SwanKiosk =
+  Interpreter:  {}
+  Interpreters: {}
