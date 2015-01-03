@@ -36,6 +36,7 @@ var vendorJS = [
   'bower_components/viewport-units-buggyfill/viewport-units-buggyfill.js',
   'bower_components/tether/tether.js',
   'bower_components/lodash/dist/lodash.min.js',
+  'bower_components/jquery/dist/jquery.min.js'
 ];
 
 var appCoffee = [
