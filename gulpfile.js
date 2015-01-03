@@ -3,6 +3,8 @@
 // This file processes all of the assets in the "client" folder, combines them with the Foundation
 // for Apps assets, and outputs the finished files in the "build" folder as a finished app.
 
+var prodMode = false;
+
 // 1. LIBRARIES
 // - - - - - - - - - - - - - - -
 
@@ -17,12 +19,17 @@ var gulp           = require('gulp'),
     path           = require('path'),
     coffeescript   = require('coffee-script/register'),
     coffee         = require('gulp-coffee'),
-    mochaPhantomJS = require('gulp-mocha-phantomjs');
+    mochaPhantomJS = require('gulp-mocha-phantomjs'),
+    coffeelint;
+
+// devDependencies
+if (!prodMode) {
+  coffeelint = require('gulp-coffeelint');
+}
 
 // 2. SETTINGS VARIABLES
 // - - - - - - - - - - - - - - -
 
-var prodMode = false;
 
 // Sass will check these folders for files when you use @import.
 var sassPaths = [
@@ -112,9 +119,18 @@ gulp.task('uglify', function() {
   ;
 
   // App JavaScript
-  var coffeeBuild = gulp.src(appCoffee)
+  var coffeeBuild = gulp.src(appCoffee);
+
+  if (!prodMode) {
+    coffeeBuild = coffeeBuild
+      .pipe(coffeelint())
+      .pipe(coffeelint.reporter());
+  }
+
+  coffeeBuild = coffeeBuild
     .pipe(coffee({bare: true}))
     .on('error', console.log)
+
   if (prodMode) {
     coffeeBuild.pipe(uglify({
       mangle: false
@@ -122,6 +138,7 @@ gulp.task('uglify', function() {
       console.log(e);
     }))
   }
+
   return coffeeBuild
     .pipe(concat('app.js'))
     .pipe(gulp.dest('./build/assets/js/'))
