@@ -40,6 +40,7 @@ var vendorJS = [
 
 var appCoffee = [
   'client/assets/coffee/app.coffee',
+  'client/assets/coffee/world.coffee',
   'client/assets/coffee/**/*.coffee'
 ];
 

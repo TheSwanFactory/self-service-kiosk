@@ -2,14 +2,14 @@ describe 'SwanKiosk.Interpreter', ->
   interpreter = SwanKiosk.Interpreter
 
   it 'creates an empty json object', ->
-    expect(interpreter.interpret {}).to.deep.eq {}
-    expect(interpreter.interpret()).to.deep.eq {}
+    expect((new interpreter {}).get()).to.deep.eq {}
+    expect((new interpreter).get()).to.deep.eq {}
 
   describe 'question', ->
-    question_interpreter = SwanKiosk.Interpreters.Question
+    questionInterpreter = SwanKiosk.Interpreters.Question
     built       = {}
     dictionary  = {}
-    beforeEach  -> built = question_interpreter(dictionary)
+    beforeEach  -> built = (new questionInterpreter dictionary).get()
 
     describe 'overall', ->
       before ->
@@ -36,3 +36,6 @@ describe 'SwanKiosk.Interpreter', ->
         wrapper = _(header.contents).last()
         why = wrapper.contents
         expect(why.contents.title).to.eq dictionary.why
+
+  describe 'body', ->
+

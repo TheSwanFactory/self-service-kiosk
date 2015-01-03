@@ -1,4 +1,4 @@
-SwanKiosk.Interpreter.Components =
+SwanKiosk.Components =
   center: (dictionary) ->
     dictionary =
       class:    'grid-container'
