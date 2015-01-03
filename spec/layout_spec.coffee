@@ -1,4 +1,4 @@
-describe 'Layout', ->
+describe 'SwanKiosk.Layout', ->
   layout  = SwanKiosk.Layout
 
   describe '.build()', ->
@@ -7,6 +7,43 @@ describe 'Layout', ->
     it 'creates a tag with contents', ->
       built = layout.build tag: 'div', contents: 'hello'
       expect(built).to.eq('<div>hello</div>')
+
+    it 'creates an empty div with no arguments', ->
+      built = layout.build()
+      expect(built).to.eq '<div></div>'
+
+    it 'creates an empty div with empty arguments', ->
+      built = layout.build {}
+      expect(built).to.eq '<div></div>'
+
+  describe '.buildTag()', ->
+    built   = null
+    options = {}
+    beforeEach -> built = layout.buildTag(options)
+
+    describe 'empty', ->
+      before -> options = {}
+
+      it 'creates an empty element', ->
+        expect(built).to.contain '></'
+
+    describe 'no tag', ->
+      before -> options = {contents: 'hello'}
+
+      it 'sets default tag', ->
+        expect(built).to.eq "<#{layout.defaultTag}>hello</#{layout.defaultTag}>"
+
+    describe 'array', ->
+      before -> options = [{contents: 'hello'}, {contents: 'friend'}]
+
+      it 'builds a set of tags', ->
+        expect(built).to.eq '<div><div>hello</div><div>friend</div></div>'
+
+    describe 'string', ->
+      before -> options = 'hello'
+
+      it 'builds contents', ->
+        expect(built).to.eq '<div>hello</div>'
 
   describe '.buildContents()', ->
     built   = null
@@ -32,6 +69,12 @@ describe 'Layout', ->
       before -> options.contents = [{tag: 'p', contents: 'hello'}]
 
       it 'renders multiple items', ->
+        expect(built).to.eq '<p>hello</p>'
+
+    describe 'object', ->
+      before -> options.contents = {tag: 'p', contents: 'hello'}
+
+      it 'renders the child', ->
         expect(built).to.eq '<p>hello</p>'
 
   describe '.buildAttributes()', ->

@@ -1,26 +1,23 @@
 class SwanKiosk.Layout
   @specialAttributes = ['contents', 'tag', 'rawHtml']
+  @defaultTag        = 'div'
   # Top level function for turning an object into HTML
-  @build: (@layout) ->
-    @buildTag @layout
+  @build: (layout = {}) =>
+    @setDefaults layout
+    @buildTag layout
 
-  @buildContents: (options) ->
-    contents = options.contents
-    if _.isArray(contents)
-      contents = @buildArray contents
-    else
-      contents = _.escape(contents) unless options.rawHtml
-
-    contents
-
-  @buildArray: (array) ->
-    array.map(@buildTag, this).join('')
+  @setDefaults: (layout) ->
+    if _.isArray(layout) or _.isString(layout)
+      layout = {contents: layout}
+    layout.tag ?= @defaultTag
+    layout
 
   @buildTag: (options) ->
+    options  = @setDefaults options
     openTag  = @buildOpenTag options
     contents = @buildContents options
     closeTag = @buildCloseTag options
-    "#{openTag}#{contents}#{closeTag}"
+    openTag + contents + closeTag
 
   @buildOpenTag: (options) ->
     attributes = @buildAttributes options
@@ -48,6 +45,19 @@ class SwanKiosk.Layout
     _(style).map((value, key) ->
       "#{SwanKiosk.Utils.dasherize key}: #{value};"
     ).join ''
+
+  @buildContents: (options) ->
+    contents = options.contents
+    if _.isPlainObject(contents)
+      contents = [contents]
+    if _.isArray(contents)
+      contents = @buildArray contents
+    else
+      contents = _.escape(contents) unless options.rawHtml
+    contents
+
+  @buildArray: (array) ->
+    array.map(@buildTag, this).join('')
 
   @buildCloseTag: (options) ->
     "</#{options.tag}>"

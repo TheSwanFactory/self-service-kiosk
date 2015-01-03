@@ -22,6 +22,8 @@ var gulp           = require('gulp'),
 // 2. SETTINGS VARIABLES
 // - - - - - - - - - - - - - - -
 
+var prodMode = false;
+
 // Sass will check these folders for files when you use @import.
 var sassPaths = [
   'client/assets/scss',
@@ -34,10 +36,12 @@ var vendorJS = [
   'bower_components/viewport-units-buggyfill/viewport-units-buggyfill.js',
   'bower_components/tether/tether.js',
   'bower_components/lodash/dist/lodash.min.js',
+  'bower_components/jquery/dist/jquery.min.js'
 ];
 
 var appCoffee = [
   'client/assets/coffee/app.coffee',
+  'client/assets/coffee/world.coffee',
   'client/assets/coffee/**/*.coffee'
 ];
 
@@ -108,15 +112,17 @@ gulp.task('uglify', function() {
   ;
 
   // App JavaScript
-  return gulp.src(appCoffee)
+  var coffeeBuild = gulp.src(appCoffee)
     .pipe(coffee({bare: true}))
     .on('error', console.log)
-    .pipe(uglify({
-      beautify: true,
+  if (prodMode) {
+    coffeeBuild.pipe(uglify({
       mangle: false
     }).on('error', function(e) {
       console.log(e);
     }))
+  }
+  return coffeeBuild
     .pipe(concat('app.js'))
     .pipe(gulp.dest('./build/assets/js/'))
     .pipe(connect.reload())
@@ -126,6 +132,7 @@ gulp.task('uglify', function() {
 gulp.task('test:build', function() {
   return gulp.src(specCoffee)
     .pipe(coffee({bare: true}))
+    .on('error', console.log)
     .pipe(concat('spec.js'))
     .pipe(gulp.dest('./build/spec/'));
 });
