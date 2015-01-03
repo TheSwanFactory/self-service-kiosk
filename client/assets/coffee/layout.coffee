@@ -2,7 +2,7 @@ class SwanKiosk.Layout
   @specialAttributes = ['contents', 'tag', 'rawHtml']
   @defaultTag        = 'div'
   # Top level function for turning an object into HTML
-  @build: (layout = {}) ->
+  @build: (layout = {}) =>
     @setDefaults layout
     @buildTag layout
 

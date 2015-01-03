@@ -21,7 +21,7 @@ describe 'SwanKiosk.Interpreter', ->
             no:  'No'
 
       it 'is', ->
-        console.log JSON.stringify(built, null, 4)
+        #console.log JSON.stringify(built, null, 4)
 
     describe 'header', ->
       header = null
