@@ -187,10 +187,10 @@ gulp.task('build', function() {
 // Default task: builds your app, starts a server, and recompiles assets when they change
 gulp.task('default', ['build', 'server:start'], function() {
   // Watch Sass
-  gulp.watch(['./client/assets/scss/**/*', './scss/**/*'], ['sass']);
+  gulp.watch(['./client/assets/scss/**/*'], ['sass']);
 
   // Watch CoffeeScript
-  gulp.watch(['./client/assets/coffee/**/*', './coffee/**/*'], ['uglify', 'test']);
+  gulp.watch(['./client/assets/coffee/**/*'], ['uglify', 'test']);
   gulp.watch(specCoffee, ['test']);
 
   // Watch config
