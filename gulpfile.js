@@ -85,6 +85,8 @@ var staticFiles = [
   '!' + srcDir + '/{scss,coffee}/**/*.*'
 ];
 
+var allCoffee = appCoffee.concat(specCoffee);
+
 // 3. TASKS
 // - - - - - - - - - - - - - - -
 
@@ -144,12 +146,6 @@ gulp.task('uglify:app', function() {
   // App JavaScript
   var coffeeBuild = gulp.src(appCoffee);
 
-  if (!prodMode) {
-    coffeeBuild = coffeeBuild
-      .pipe(coffeelint())
-      .pipe(coffeelint.reporter());
-  }
-
   coffeeBuild = coffeeBuild
     .pipe(coffee({bare: true}))
     .on('error', handleError)
@@ -171,6 +167,13 @@ gulp.task('cson', function() {
   return gulp.src(configDir + '/**/*.cson')
     .pipe(cson())
     .pipe(gulp.dest(assetDir + '/config'));
+});
+
+gulp.task('lint', function() {
+  return gulp.src(allCoffee)
+    .pipe(coffeelint())
+    .pipe(coffeelint.reporter())
+    .pipe(coffeelint.reporter('fail'));
 });
 
 gulp.task('test:build', function() {
@@ -207,8 +210,8 @@ gulp.task('default', ['build', 'server:start'], function() {
   gulp.watch([sassDir + anyFile()], ['sass']);
 
   // Watch CoffeeScript
-  gulp.watch(appCoffee, ['uglify', 'test']);
-  gulp.watch(specCoffee, ['test']);
+  gulp.watch(appCoffee, ['lint', 'uglify', 'test']);
+  gulp.watch(specCoffee, ['lint', 'test']);
 
   // Watch config
   gulp.watch([configDir + anyFile('cson')], ['cson']);
