@@ -33,34 +33,56 @@ function handleError(error) {
   this.emit('end');
 }
 
+function anyFile(extension) {
+  if (typeof extension === 'undefined') {
+    extension = '*';
+  }
+
+  return '/**/*.' + extension;
+}
+
 // 2. SETTINGS VARIABLES
 // - - - - - - - - - - - - - - -
 
+var srcDir    = 'src',
+    coffeeDir = srcDir + '/coffee',
+    configDir = 'config',
+    specDir   = 'spec',
+    bowerDir  = 'bower_components',
+    buildDir  = 'build',
+    assetDir  = buildDir + '/assets',
+    jsDir     = assetDir + '/js';
 
 // Sass will check these folders for files when you use @import.
-var sassPaths = [
-  'client/assets/scss',
-  'bower_components/foundation-apps/scss',
-  'bower_components/font-awesome/scss'
+var sassDir  = srcDir + '/scss',
+    sassPaths = [
+  sassDir,
+  bowerDir + '/foundation-apps/scss',
+  bowerDir + '/font-awesome/scss'
 ];
 // These files include Foundation for Apps and its dependencies
 var vendorJS = [
-  'bower_components/fastclick/lib/fastclick.js',
-  'bower_components/viewport-units-buggyfill/viewport-units-buggyfill.js',
-  'bower_components/tether/tether.js',
-  'bower_components/lodash/dist/lodash.min.js',
-  'bower_components/jquery/dist/jquery.min.js'
+  bowerDir + '/fastclick/lib/fastclick.js',
+  bowerDir + '/viewport-units-buggyfill/viewport-units-buggyfill.js',
+  bowerDir + '/tether/tether.js',
+  bowerDir + '/lodash/dist/lodash.min.js',
+  bowerDir + '/jquery/dist/jquery.min.js'
 ];
 
 var appCoffee = [
-  'client/assets/coffee/app.coffee',
-  'client/assets/coffee/world.coffee',
-  'client/assets/coffee/**/*.coffee'
+  coffeeDir + '/app.coffee',
+  coffeeDir + '/world.coffee',
+  coffeeDir + anyFile('coffee')
 ];
 
 var specCoffee = [
-  'spec/spec.coffee',
-  'spec/**/*.coffee'
+  specDir + '/spec.coffee',
+  specDir + '/**/*.coffee'
+];
+
+var staticFiles = [
+  srcDir + '/**/*.*',
+  '!' + srcDir + '/{scss,coffee}/**/*.*'
 ];
 
 // 3. TASKS
@@ -68,19 +90,14 @@ var specCoffee = [
 
 // Cleans the build directory
 gulp.task('clean', function(cb) {
-  rimraf('./build', cb);
+  rimraf(buildDir, cb);
 });
 
 // Copies user-created files and Foundation assets
 gulp.task('copy', function() {
-  var dirs = [
-    './client/**/*.*',
-    '!./client/assets/{scss,coffee}/**/*.*'
-  ];
-
   // Everything in the client folder except templates, Sass, and JS
-  gulp.src(dirs, {
-    base: './client/'
+  return gulp.src(staticFiles, {
+    base: srcDir
   })
     .pipe(gulp.dest('./build'))
     .pipe(connect.reload());
@@ -88,7 +105,7 @@ gulp.task('copy', function() {
 
 // Compiles Sass
 gulp.task('sass', function() {
-  return gulp.src('client/assets/scss/app.scss')
+  return gulp.src(sassDir + '/app.scss')
     .pipe(sass({
       loadPath: sassPaths,
       style: 'nested',
@@ -99,13 +116,13 @@ gulp.task('sass', function() {
     .pipe(autoprefixer({
       browsers: ['last 2 versions', 'ie 10']
     }))
-    .pipe(gulp.dest('./build/assets/css/'))
+    .pipe(gulp.dest(assetDir + '/css/'))
     .pipe(connect.reload());
 });
 
 gulp.task('icons', function() {
-  return gulp.src('bower_components/font-awesome/fonts/**.*')
-    .pipe(gulp.dest('./build/assets/fonts/'));
+  return gulp.src(bowerDir + '/font-awesome/fonts/**.*')
+    .pipe(gulp.dest(assetDir + '/fonts/'));
 });
 
 // UGLIFY
@@ -119,7 +136,7 @@ gulp.task('uglify:vendor', function() {
       mangle: false
     }).on('error', handleError))
     .pipe(concat('vendor.js'))
-    .pipe(gulp.dest('./build/assets/js/'));
+    .pipe(gulp.dest(jsDir));
 });
 
 // Compiles and copies the Foundation for Apps JavaScript, as well as your app's custom JS
@@ -145,15 +162,15 @@ gulp.task('uglify:app', function() {
 
   return coffeeBuild
     .pipe(concat('app.js'))
-    .pipe(gulp.dest('./build/assets/js/'))
+    .pipe(gulp.dest(jsDir))
     .pipe(connect.reload())
   ;
 });
 
 gulp.task('cson', function() {
-  return gulp.src('./config/**/*.cson')
+  return gulp.src(configDir + '/**/*.cson')
     .pipe(cson())
-    .pipe(gulp.dest('./build/assets/config/'));
+    .pipe(gulp.dest(assetDir + '/config'));
 });
 
 gulp.task('test:build', function() {
@@ -161,11 +178,11 @@ gulp.task('test:build', function() {
     .pipe(coffee({bare: true}))
     .on('error', handleError)
     .pipe(concat('spec.js'))
-    .pipe(gulp.dest('./build/spec/'));
+    .pipe(gulp.dest(buildDir + '/spec'));
 });
 
 gulp.task('test', ['test:build'], function() {
-  return gulp.src('./spec/runner.html')
+  return gulp.src(specDir + '/runner.html')
     .pipe(mochaPhantomJS());
 });
 
@@ -187,15 +204,15 @@ gulp.task('build', function() {
 // Default task: builds your app, starts a server, and recompiles assets when they change
 gulp.task('default', ['build', 'server:start'], function() {
   // Watch Sass
-  gulp.watch(['./client/assets/scss/**/*'], ['sass']);
+  gulp.watch([sassDir + anyFile()], ['sass']);
 
   // Watch CoffeeScript
-  gulp.watch(['./client/assets/coffee/**/*'], ['uglify', 'test']);
+  gulp.watch(appCoffee, ['uglify', 'test']);
   gulp.watch(specCoffee, ['test']);
 
   // Watch config
-  gulp.watch(['./config/**/*.cson'], ['cson']);
+  gulp.watch([configDir + anyFile('cson')], ['cson']);
 
   // Watch static files
-  gulp.watch(['./client/**/*.*', '!./client/templates/**/*.*', '!./client/assets/{scss,js}/**/*.*'], ['copy']);
+  gulp.watch(staticFiles, ['copy']);
 });
