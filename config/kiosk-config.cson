@@ -41,7 +41,9 @@
     background_color: "blue"
     font_color: "white"
     font_family: "Optima"
-    border_style: "rounded"
+    button: {
+      border_style: "rounded"
+    }
   }
 
   timeout: 300 # how many seconds until it reverts to home screen
