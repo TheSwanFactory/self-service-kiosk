@@ -76,7 +76,7 @@
       why: "This helps us better estimate your health risks"
       select: {
         m6:"6 months or less"
-        m12: "1 year"
+        m12: "About a year"
         m24: "Longer"
         other: "Not sure"
       }
