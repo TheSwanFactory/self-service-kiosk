@@ -27,6 +27,11 @@ if (!prodMode) {
   coffeelint = require('gulp-coffeelint');
 }
 
+function handleError(error) {
+  console.log(error.toString());
+  this.emit('end');
+}
+
 // 2. SETTINGS VARIABLES
 // - - - - - - - - - - - - - - -
 
@@ -89,9 +94,7 @@ gulp.task('sass', function() {
       bundleExec: true,
       'sourcemap=none': true
     }))
-    .on('error', function(e) {
-      console.log(e);
-    })
+    .on('error', handleError)
     .pipe(autoprefixer({
       browsers: ['last 2 versions', 'ie 10']
     }))
@@ -104,20 +107,22 @@ gulp.task('icons', function() {
     .pipe(gulp.dest('./build/assets/fonts/'));
 });
 
-// Compiles and copies the Foundation for Apps JavaScript, as well as your app's custom JS
-gulp.task('uglify', function() {
-  // Vendor JavaScript
-  gulp.src(vendorJS)
+// UGLIFY
+
+gulp.task('uglify', ['uglify:vendor', 'uglify:app'])
+
+gulp.task('uglify:vendor', function() {
+  return gulp.src(vendorJS)
     .pipe(uglify({
       beautify: true,
       mangle: false
-    }).on('error', function(e) {
-      console.log(e);
-    }))
+    }).on('error', handleError))
     .pipe(concat('vendor.js'))
-    .pipe(gulp.dest('./build/assets/js/'))
-  ;
+    .pipe(gulp.dest('./build/assets/js/'));
+});
 
+// Compiles and copies the Foundation for Apps JavaScript, as well as your app's custom JS
+gulp.task('uglify:app', function() {
   // App JavaScript
   var coffeeBuild = gulp.src(appCoffee);
 
@@ -129,14 +134,12 @@ gulp.task('uglify', function() {
 
   coffeeBuild = coffeeBuild
     .pipe(coffee({bare: true}))
-    .on('error', console.log)
+    .on('error', handleError)
 
   if (prodMode) {
     coffeeBuild.pipe(uglify({
       mangle: false
-    }).on('error', function(e) {
-      console.log(e);
-    }))
+    }).on('error', handleError))
   }
 
   return coffeeBuild
@@ -149,7 +152,7 @@ gulp.task('uglify', function() {
 gulp.task('test:build', function() {
   return gulp.src(specCoffee)
     .pipe(coffee({bare: true}))
-    .on('error', console.log)
+    .on('error', handleError)
     .pipe(concat('spec.js'))
     .pipe(gulp.dest('./build/spec/'));
 });
