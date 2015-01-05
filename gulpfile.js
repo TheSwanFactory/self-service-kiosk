@@ -19,6 +19,7 @@ var gulp           = require('gulp'),
     path           = require('path'),
     coffeescript   = require('coffee-script/register'),
     coffee         = require('gulp-coffee'),
+    cson           = require('gulp-cson'),
     mochaPhantomJS = require('gulp-mocha-phantomjs'),
     coffeelint;
 
@@ -149,6 +150,12 @@ gulp.task('uglify:app', function() {
   ;
 });
 
+gulp.task('cson', function() {
+  return gulp.src('./config/**/*.cson')
+    .pipe(cson())
+    .pipe(gulp.dest('./build/assets/config/'));
+});
+
 gulp.task('test:build', function() {
   return gulp.src(specCoffee)
     .pipe(coffee({bare: true}))
@@ -172,7 +179,7 @@ gulp.task('server:start', function() {
 
 // Builds your entire app once, without starting a server
 gulp.task('build', function() {
-  runSequence('clean', ['copy', 'sass', 'icons', 'uglify'], function() {
+  runSequence('clean', ['copy', 'sass', 'icons', 'uglify', 'cson'], function() {
     console.log("Successfully built.");
   })
 });
@@ -185,6 +192,9 @@ gulp.task('default', ['build', 'server:start'], function() {
   // Watch CoffeeScript
   gulp.watch(['./client/assets/coffee/**/*', './coffee/**/*'], ['uglify', 'test']);
   gulp.watch(specCoffee, ['test']);
+
+  // Watch config
+  gulp.watch(['./config/**/*.cson'], ['cson']);
 
   // Watch static files
   gulp.watch(['./client/**/*.*', '!./client/templates/**/*.*', '!./client/assets/{scss,js}/**/*.*'], ['copy']);
