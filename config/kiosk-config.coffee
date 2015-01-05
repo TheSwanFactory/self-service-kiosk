@@ -28,8 +28,8 @@
 # * paragraph (multi-line)
 # * email (validation)
 
-
-exports.module = {
+åœ
+{
   owner: {
     name: "Joe Random User"
     email: "joe@self-service-kiosk.com"
