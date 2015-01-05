@@ -28,7 +28,6 @@
 # * paragraph (multi-line)
 # * email (validation)
 
-åœ
 {
   owner: {
     name: "Joe Random User"
@@ -38,9 +37,12 @@
     {kind: "video", name: "Acuvue", url: "http://youtu.be/Dg81rnLYZys" }
     {kind: "text", name: "Johnson & Johnson"}
   ]
-  background_color: "blue"
-  font_color: "white"
-  font_family: "Optima"
+  style: {
+    background_color: "blue"
+    font_color: "white"
+    font_family: "Optima"
+    border_style: "rounded"
+  }
 
   timeout: 300 # how many seconds until it reverts to home screen
 
