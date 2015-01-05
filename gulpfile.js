@@ -19,12 +19,18 @@ var gulp           = require('gulp'),
     path           = require('path'),
     coffeescript   = require('coffee-script/register'),
     coffee         = require('gulp-coffee'),
+    cson           = require('gulp-cson'),
     mochaPhantomJS = require('gulp-mocha-phantomjs'),
     coffeelint;
 
 // devDependencies
 if (!prodMode) {
   coffeelint = require('gulp-coffeelint');
+}
+
+function handleError(error) {
+  console.log(error.toString());
+  this.emit('end');
 }
 
 // 2. SETTINGS VARIABLES
@@ -89,9 +95,7 @@ gulp.task('sass', function() {
       bundleExec: true,
       'sourcemap=none': true
     }))
-    .on('error', function(e) {
-      console.log(e);
-    })
+    .on('error', handleError)
     .pipe(autoprefixer({
       browsers: ['last 2 versions', 'ie 10']
     }))
@@ -104,20 +108,22 @@ gulp.task('icons', function() {
     .pipe(gulp.dest('./build/assets/fonts/'));
 });
 
-// Compiles and copies the Foundation for Apps JavaScript, as well as your app's custom JS
-gulp.task('uglify', function() {
-  // Vendor JavaScript
-  gulp.src(vendorJS)
+// UGLIFY
+
+gulp.task('uglify', ['uglify:vendor', 'uglify:app'])
+
+gulp.task('uglify:vendor', function() {
+  return gulp.src(vendorJS)
     .pipe(uglify({
       beautify: true,
       mangle: false
-    }).on('error', function(e) {
-      console.log(e);
-    }))
+    }).on('error', handleError))
     .pipe(concat('vendor.js'))
-    .pipe(gulp.dest('./build/assets/js/'))
-  ;
+    .pipe(gulp.dest('./build/assets/js/'));
+});
 
+// Compiles and copies the Foundation for Apps JavaScript, as well as your app's custom JS
+gulp.task('uglify:app', function() {
   // App JavaScript
   var coffeeBuild = gulp.src(appCoffee);
 
@@ -129,14 +135,12 @@ gulp.task('uglify', function() {
 
   coffeeBuild = coffeeBuild
     .pipe(coffee({bare: true}))
-    .on('error', console.log)
+    .on('error', handleError)
 
   if (prodMode) {
     coffeeBuild.pipe(uglify({
       mangle: false
-    }).on('error', function(e) {
-      console.log(e);
-    }))
+    }).on('error', handleError))
   }
 
   return coffeeBuild
@@ -146,10 +150,16 @@ gulp.task('uglify', function() {
   ;
 });
 
+gulp.task('cson', function() {
+  return gulp.src('./config/**/*.cson')
+    .pipe(cson())
+    .pipe(gulp.dest('./build/assets/config/'));
+});
+
 gulp.task('test:build', function() {
   return gulp.src(specCoffee)
     .pipe(coffee({bare: true}))
-    .on('error', console.log)
+    .on('error', handleError)
     .pipe(concat('spec.js'))
     .pipe(gulp.dest('./build/spec/'));
 });
@@ -169,7 +179,7 @@ gulp.task('server:start', function() {
 
 // Builds your entire app once, without starting a server
 gulp.task('build', function() {
-  runSequence('clean', ['copy', 'sass', 'icons', 'uglify'], function() {
+  runSequence('clean', ['copy', 'sass', 'icons', 'uglify', 'cson'], function() {
     console.log("Successfully built.");
   })
 });
@@ -177,11 +187,14 @@ gulp.task('build', function() {
 // Default task: builds your app, starts a server, and recompiles assets when they change
 gulp.task('default', ['build', 'server:start'], function() {
   // Watch Sass
-  gulp.watch(['./client/assets/scss/**/*', './scss/**/*'], ['sass']);
+  gulp.watch(['./client/assets/scss/**/*'], ['sass']);
 
   // Watch CoffeeScript
-  gulp.watch(['./client/assets/coffee/**/*', './coffee/**/*'], ['uglify', 'test']);
+  gulp.watch(['./client/assets/coffee/**/*'], ['uglify', 'test']);
   gulp.watch(specCoffee, ['test']);
+
+  // Watch config
+  gulp.watch(['./config/**/*.cson'], ['cson']);
 
   // Watch static files
   gulp.watch(['./client/**/*.*', '!./client/templates/**/*.*', '!./client/assets/{scss,js}/**/*.*'], ['copy']);
