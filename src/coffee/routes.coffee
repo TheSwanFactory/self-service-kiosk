@@ -8,6 +8,6 @@ defaultRoute = (ctx) ->
 notFound = ->
   $('body').html '404d!'
 
-page '/:controller/:action/:id?', defaultRoute
+page '/:controller/:action?/:id?', defaultRoute
 page '', defaultRoute
 page '*', notFound
