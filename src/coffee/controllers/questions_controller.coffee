@@ -12,8 +12,7 @@ class SwanKiosk.Controllers.QuestionsController extends SwanKiosk.Controller
     @questionKey = Object.keys(SwanKiosk.Config.questions)[@id]
     question = SwanKiosk.Config.questions[@questionKey]
     if question?
-      question = new SwanKiosk.Interpreters.Question question
-      question.get()
+      new SwanKiosk.Interpreters.Question question
     else
       page '/questions/results'
 

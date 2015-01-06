@@ -44,6 +44,7 @@ class SwanKiosk.Controller
   _render: (contents) ->
     return false if @rendered || !contents?
     @rendered = true
+    contents = contents.get() if contents instanceof SwanKiosk.World
     if @layout
       contents = @layout contents
     contents._context = this
