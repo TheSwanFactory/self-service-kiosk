@@ -657,7 +657,9 @@ SwanKiosk.Controllers.QuestionsController = (function(_super) {
     return page("/questions/" + (this.id + 1));
   };
 
-  QuestionsController.prototype._prevQuestion = function() {};
+  QuestionsController.prototype._prevQuestion = function() {
+    return page("/questions/" + (this.id - 1));
+  };
 
   QuestionsController.prototype._startOver = function() {
     SwanKiosk.Store.answers = {};
