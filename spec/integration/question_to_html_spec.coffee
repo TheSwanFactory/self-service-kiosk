@@ -1,5 +1,4 @@
 describe 'Question to HTML', ->
-  @timeout 0
   interpreter = SwanKiosk.Interpreters.Question
   layout      = SwanKiosk.Layout
   question =

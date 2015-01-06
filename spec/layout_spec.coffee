@@ -6,15 +6,18 @@ describe 'SwanKiosk.Layout', ->
     options = {}
     it 'creates a tag with contents', ->
       built = layout.build tag: 'div', contents: 'hello'
-      expect(built).to.eq('<div>hello</div>')
+      expect(built.tagName.toLowerCase()).to.eq 'div'
+      expect(built.textContent).to.eq 'hello'
 
     it 'creates an empty div with no arguments', ->
       built = layout.build()
-      expect(built).to.eq '<div></div>'
+      expect(built.tagName.toLowerCase()).to.eq 'div'
+      expect(built.textContent).to.eq ''
 
     it 'creates an empty div with empty arguments', ->
       built = layout.build {}
-      expect(built).to.eq '<div></div>'
+      expect(built.tagName.toLowerCase()).to.eq 'div'
+      expect(built.textContent).to.eq ''
 
   describe '.buildTag()', ->
     built   = null
@@ -25,62 +28,66 @@ describe 'SwanKiosk.Layout', ->
       before -> options = {}
 
       it 'creates an empty element', ->
-        expect(built).to.contain '></'
+        expect(built.textContent).to.eq ''
 
     describe 'no tag', ->
       before -> options = {contents: 'hello'}
 
       it 'sets default tag', ->
-        expect(built).to.eq "<#{layout.defaultTag}>hello</#{layout.defaultTag}>"
+        expect(built.tagName.toLowerCase()).to.eq layout.defaultTag
 
     describe 'array', ->
       before -> options = [{contents: 'hello'}, {contents: 'friend'}]
 
       it 'builds a set of tags', ->
-        expect(built).to.eq '<div><div>hello</div><div>friend</div></div>'
+        expect(built.children.length).to.eq 2
 
     describe 'string', ->
       before -> options = 'hello'
 
       it 'builds contents', ->
-        expect(built).to.eq '<div>hello</div>'
+        expect(built.outerHTML).to.eq '<div>hello</div>'
 
   describe '.buildContents()', ->
     built   = null
+    element = document.createElement 'div'
     options = {}
-    beforeEach -> built = layout.buildContents(options)
+    beforeEach -> built = layout.buildContents(element, options)
 
     describe 'string', ->
       before -> options.contents = '<b>content</b>'
 
       it 'adds string', ->
-        expect(built).to.contain 'content'
+        expect(built.textContent).to.contain 'content'
 
       it 'escapes string', ->
-        expect(built).to.not.contain('<b>')
+        expect(built.textContent).to.not.contain('<b>')
 
       describe 'rawHtml', ->
         before -> options.rawHtml = true
 
         it 'does not escape', ->
-          expect(built).to.contain('<b>')
+          expect(built.textContent).to.contain('<b>')
 
     describe 'array', ->
-      before -> options.contents = [{tag: 'p', contents: 'hello'}]
+      before -> options = {contents: [{tag: 'p', contents: 'hello'}]}
 
       it 'renders multiple items', ->
-        expect(built).to.eq '<p>hello</p>'
+        expect(built[0].outerHTML).to.eq '<p>hello</p>'
 
     describe 'object', ->
       before -> options.contents = {tag: 'p', contents: 'hello'}
 
       it 'renders the child', ->
-        expect(built).to.eq '<p>hello</p>'
+        expect(built[0].outerHTML).to.eq '<p>hello</p>'
 
   describe '.buildAttributes()', ->
     built   = null
     options = {}
-    beforeEach -> built = layout.buildAttributes(options)
+    element = null
+    beforeEach ->
+      element = document.createElement 'div'
+      built = layout.buildAttributes(element, options)
 
     describe 'options', ->
       describe 'special attributes', ->
@@ -89,49 +96,64 @@ describe 'SwanKiosk.Layout', ->
             options[option] = 'value'
 
         it "does not set special attributes as HTML attributes", ->
-          expect(built).to.eq ''
+          layout.specialAttributes.forEach (option) ->
+            expect(element.getAttribute option).to.eq null
 
       describe 'attributes', ->
         describe 'simple strings', ->
           before -> options = {class: 'classy', id: 'object'}
 
           it 'sets properly', ->
-            expect(built).to.include('class="classy" id="object"')
+            expect(element.getAttribute 'class').to.eq 'classy'
+            expect(element.getAttribute 'id').to.eq 'object'
 
         describe 'data', ->
           before -> options = {data_title: 'title'}
 
           it 'sets properly', ->
-            expect(built).to.include 'data-title="title"'
+            expect(element.getAttribute 'data-title').to.eq 'title'
 
         describe 'style', ->
           before -> options = {style: {max_width: '500px'}}
 
           it 'sets style', ->
-            expect(built).to.include('style="max-width:')
+            expect(element.getAttribute 'style').to.include('max-width:')
 
   describe '.buildSingleAttribute()', ->
     options =
       simple: 'string'
       style:  {max_width: '500px'}
       json:   {key: 'val'}
-    attribute = null
-    built     = null
-    beforeEach -> built = layout.buildSingleAttribute(options)(attribute)
+    attribute      = null
+    attributeValue = null
+    built          = null
+    element        = document.createElement 'div'
+    beforeEach ->
+      built = layout.buildSingleAttribute(element, options)(attribute)
+      attributeValue = element.getAttribute attribute
 
     describe 'simple string', ->
       before -> attribute = 'simple'
 
       it 'builds attribute', ->
-        expect(built).to.eq 'simple="string"'
+        expect(attributeValue).to.eq 'string'
 
     describe 'json', ->
       before -> attribute = 'json'
 
       it 'builds attribute', ->
-        expect(built).to.eq "json=\"#{JSON.stringify(options.json)}\""
+        expect(attributeValue).to.eq JSON.stringify(options.json)
 
-    describe 'style', ->
+  describe '.addEventListeners()', ->
+    element = document.createElement 'div'
+    events  = {click: sinon.spy()}
+    beforeEach -> layout.addEventListeners element, events
+
+    it 'adds events properly', ->
+      evt = document.createEvent 'HTMLEvents'
+      evt.initEvent 'click', true, true # event type,bubbling,cancelable
+      element.dispatchEvent evt
+      expect(events.click.called).to.eq true
 
   describe '.buildStyleAttribute()', ->
     style = {max_width: '500px', background_color: 'white', 'min-width': '10px'}

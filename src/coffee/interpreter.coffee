@@ -10,14 +10,12 @@ class SwanKiosk.Interpreters.Question extends SwanKiosk.Interpreter
   get: -> [@header(), @body(), @navigation()]
 
   questionOption: (option, value) ->
-    {tag: 'a', class: 'answer', contents: option, value: value}
-
-  interpretBody: ->
-    options = _.map @dictionary.select, @questionOption
-    {
-      class:    'body'
-      contents: SwanKiosk.Components.center(options)
-    }
+    tag:      'a'
+    class:    'answer'
+    contents: option
+    value:    value
+    events:
+      click: (e) -> @_selectOption value, e
 
   interpretHeader: ->
     class:    'header'
@@ -29,7 +27,22 @@ class SwanKiosk.Interpreters.Question extends SwanKiosk.Interpreter
       contents: {tag: 'a', class: 'why', contents: @why, title: @dictionary.why}
     })]
 
+  interpretBody: ->
+    options = _.map @dictionary.select, @questionOption
+    {
+      class:    'body'
+      contents: SwanKiosk.Components.center(options)
+    }
+
   interpretNavigation: ->
+    prevOptions =
+      class: 'previous'
+      events:
+        click: -> @_prevQuestion()
+    nextOptions =
+      class: 'next'
+      events:
+        click: -> @_nextQuestion()
     class:    'navigation',
     contents: [{
       class:    'start-over'
@@ -37,7 +50,7 @@ class SwanKiosk.Interpreters.Question extends SwanKiosk.Interpreter
     }, {
       class:    'change-page',
       contents: [
-        SwanKiosk.Components.link('Previous', class: 'previous')
-        SwanKiosk.Components.link('Next',     class: 'next')
+        SwanKiosk.Components.link 'Previous', prevOptions
+        SwanKiosk.Components.link 'Next',     nextOptions
       ]
     }]

@@ -1,8 +1,9 @@
 class SwanKiosk.Layout
-  @specialAttributes = ['contents', 'tag', 'rawHtml']
+  @specialAttributes = ['contents', 'tag', 'rawHtml', '_context']
   @defaultTag        = 'div'
   # Top level function for turning an object into HTML
   @build: (layout = {}) =>
+    @context = layout._context || null
     @setDefaults layout
     @buildTag layout
 
@@ -12,52 +13,78 @@ class SwanKiosk.Layout
     layout.tag ?= @defaultTag
     layout
 
-  @buildTag: (options) ->
+  @buildTag: (parent, options) ->
+    unless options? || parent instanceof HTMLElement
+      options = parent
+      parent = null
     options  = @setDefaults options
-    openTag  = @buildOpenTag options
-    contents = @buildContents options
-    closeTag = @buildCloseTag options
-    openTag + contents + closeTag
+    element  = @buildElement options
+
+    @buildAttributes element, options
+    @buildContents element, options
+
+    if parent?
+      parent.appendChild(element)
+    else
+      element
+
+  @buildElement: (options) ->
+    document.createElement options.tag
 
   @buildOpenTag: (options) ->
     attributes = @buildAttributes options
     attributes = ' ' + attributes if attributes.length
     "<#{options.tag}#{attributes}>"
 
-  @buildAttributes: (options) ->
+  @buildAttributes: (element, options) ->
     _(Object.keys options)
       .difference(@specialAttributes) # remove specialAttributes
-      .map(@buildSingleAttribute(options), this)
-      .join ' '
+      .map(@buildSingleAttribute(element, options), this)
 
-  @buildSingleAttribute: (options) ->
+  @buildSingleAttribute: (element, options) ->
     (attribute) ->
       key   = SwanKiosk.Utils.dasherize attribute
       value = options[attribute]
       if _.isObject value
         if key == 'style'
           value = @buildStyleAttribute value
+        else if key == 'events'
+          return @addEventListeners element, value
         else
           value = JSON.stringify value
-      "#{key}=\"#{value}\""
+      element.setAttribute key, value
+
+  @addEventListeners: (element, events) ->
+    if @context
+      for name, func of events
+        element.addEventListener name, func.bind(@context)
+    else
+      for name, func of events
+        element.addEventListener name, func
 
   @buildStyleAttribute: (style) ->
     _(style).map((value, key) ->
       "#{SwanKiosk.Utils.dasherize key}: #{value};"
     ).join ''
 
-  @buildContents: (options) ->
-    contents = options.contents
+  @buildContents: (element, options) ->
+    contents = options.contents || ''
     if _.isPlainObject(contents)
       contents = [contents]
-    if _.isArray(contents)
-      contents = @buildArray contents
-    else
+    return @buildArray element, contents if _.isArray(contents)
+
+    if !(contents instanceof HTMLElement)
+      contents = contents.toString()
       contents = _.escape(contents) unless options.rawHtml
+      contents = document.createTextNode contents
+    element.appendChild contents
     contents
 
-  @buildArray: (array) ->
-    array.map(@buildTag, this).join('')
+  @buildArray: (element, array) ->
+    array.map @buildTagFactory(element), this
+
+  @buildTagFactory: (element) ->
+    (contents) -> @buildTag element, contents
 
   @buildCloseTag: (options) ->
     "</#{options.tag}>"
