@@ -68,8 +68,9 @@ class SwanKiosk.Layout
       contents = [contents]
     return @buildArray element, contents if _.isArray(contents)
 
-    contents = _.escape(contents) unless options.rawHtml
-    contents = document.createTextNode contents
+    if _.isString(contents)
+      contents = _.escape(contents) unless options.rawHtml
+      contents = document.createTextNode contents
     element.appendChild contents
     contents
 
