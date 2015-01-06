@@ -2,6 +2,7 @@
 SwanKiosk =
   Interpreters: {}
   Components:   {}
+  Config:       {}
   Controllers:
     _find: (name) ->
       _.find this, (value, key) ->
@@ -15,3 +16,9 @@ SwanKiosk =
 
 # on page load
 $ SwanKiosk.init
+
+$.ajax(
+  url: '/assets/config/kiosk-config.json'
+  async: false
+).done (data) ->
+  SwanKiosk.Config = data
