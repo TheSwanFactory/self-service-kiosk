@@ -48,10 +48,14 @@ class SwanKiosk.Layout
         if key == 'style'
           value = @buildStyleAttribute value
         else if key == 'events'
-          return ''
+          return @addEventListeners element, attribute
         else
           value = JSON.stringify value
       element.setAttribute key, value
+
+  @addEventListeners: (element, events) ->
+    for name, func of events
+      element.addEventListener name, func
 
   @buildStyleAttribute: (style) ->
     _(style).map((value, key) ->

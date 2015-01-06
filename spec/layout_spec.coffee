@@ -144,7 +144,16 @@ describe 'SwanKiosk.Layout', ->
       it 'builds attribute', ->
         expect(attributeValue).to.eq JSON.stringify(options.json)
 
-    describe 'style', ->
+  describe '.addEventListeners()', ->
+    element = document.createElement 'div'
+    events  = {click: sinon.spy()}
+    beforeEach -> layout.addEventListeners element, events
+
+    it 'adds events properly', ->
+      evt = document.createEvent 'HTMLEvents'
+      evt.initEvent 'click', true, true # event type,bubbling,cancelable
+      element.dispatchEvent evt
+      expect(events.click.called).to.eq true
 
   describe '.buildStyleAttribute()', ->
     style = {max_width: '500px', background_color: 'white', 'min-width': '10px'}
