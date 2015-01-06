@@ -1,7 +1,5 @@
 class SwanKiosk.Controllers.QuestionsController extends SwanKiosk.Controller
-  constructor: ->
-    @layout = SwanKiosk.Components.layout
-    super()
+  layout: SwanKiosk.Components.layout
 
   index: ->
     [{
