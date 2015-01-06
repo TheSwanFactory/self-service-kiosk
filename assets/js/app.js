@@ -145,6 +145,9 @@ SwanKiosk.Controller = (function() {
       return false;
     }
     this.rendered = true;
+    if (contents instanceof SwanKiosk.World) {
+      contents = contents.get();
+    }
     if (this.layout) {
       contents = this.layout(contents);
     }
@@ -276,7 +279,12 @@ SwanKiosk.Interpreters.Question = (function(_super) {
           "class": 'start-over',
           contents: {
             tag: 'a',
-            contents: 'Start Over'
+            contents: 'Start Over',
+            events: {
+              click: function() {
+                return this._startOver();
+              }
+            }
           }
         }, {
           "class": 'change-page',
@@ -618,21 +626,14 @@ SwanKiosk.Controllers.QuestionsController = (function(_super) {
     this.questionKey = Object.keys(SwanKiosk.Config.questions)[this.id];
     question = SwanKiosk.Config.questions[this.questionKey];
     if (question != null) {
-      question = new SwanKiosk.Interpreters.Question(question);
-      return question.get();
+      return new SwanKiosk.Interpreters.Question(question);
     } else {
       return page('/questions/results');
     }
   };
 
   QuestionsController.prototype.results = function() {
-    console.log('helo!');
-    console.log(SwanKiosk.Store.answers);
-    return {
-      tag: 'pre',
-      rawHtml: true,
-      contents: JSON.stringify(SwanKiosk.Store.answers || {})
-    };
+    return new SwanKiosk.Interpreters.Results(SwanKiosk.Store.answers);
   };
 
   QuestionsController.prototype._selectOption = function(value, event) {
@@ -658,6 +659,77 @@ SwanKiosk.Controllers.QuestionsController = (function(_super) {
 
   QuestionsController.prototype._prevQuestion = function() {};
 
+  QuestionsController.prototype._startOver = function() {
+    SwanKiosk.Store.answers = {};
+    return page('/questions/0');
+  };
+
   return QuestionsController;
 
 })(SwanKiosk.Controller);
+
+var __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+SwanKiosk.Interpreters.Results = (function(_super) {
+  __extends(Results, _super);
+
+  function Results() {
+    return Results.__super__.constructor.apply(this, arguments);
+  }
+
+  Results.prototype.get = function() {
+    return {
+      "class": 'body',
+      contents: {
+        "class": 'grid-container',
+        contents: this.table()
+      }
+    };
+  };
+
+  Results.prototype.table = function() {
+    return {
+      tag: 'table',
+      "class": 'results',
+      contents: [
+        {
+          tag: 'thead',
+          contents: {
+            tag: 'tr',
+            contents: [
+              {
+                tag: 'th',
+                contents: 'Question'
+              }, {
+                tag: 'th',
+                contents: 'Answer'
+              }
+            ]
+          }
+        }, {
+          tag: 'tbody',
+          contents: _.map(this.dictionary, this.answerRow)
+        }
+      ]
+    };
+  };
+
+  Results.prototype.answerRow = function(value, key) {
+    return {
+      tag: 'tr',
+      contents: [
+        {
+          tag: 'td',
+          contents: SwanKiosk.Config.questions[key].title
+        }, {
+          tag: 'td',
+          contents: SwanKiosk.Config.questions[key].select[value]
+        }
+      ]
+    };
+  };
+
+  return Results;
+
+})(SwanKiosk.Interpreter);

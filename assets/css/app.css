@@ -7637,6 +7637,8 @@ ul, ol {
       .body .answer.selected .iconic *.iconic-property-accent {
         fill: #fff;
         stroke: #fff; }
+  .body .results td {
+    padding: 1rem; }
 
 .navigation {
   background-color: #dfdfdf;
