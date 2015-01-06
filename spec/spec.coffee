@@ -6,6 +6,9 @@ $ ->
 afterEach ->
   fixtureDiv.empty()
 
+# disable page
+page = (->)
+
 describe 'Dependencies', ->
   it 'has loDash', ->
     expect(typeof _).to.not.eq 'undefined'
