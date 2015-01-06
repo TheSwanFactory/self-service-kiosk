@@ -32,8 +32,21 @@
   questions: {
     sex: {
       title: "Gender"
-      why: "This helps us better estimate your health risks"
+      why: "Men and Women have different risk profiles for eye disease."
       select: {M: "Male", F: "Female", other: "Other"}
+    }
+    height: {
+      title: "Height"
+      why: "This helps us better estimate your health risks"
+      group: [
+        {digit: 'feet'}
+        {digit: 'inches'}
+      ]
+    }
+    weight: {
+      title: "Height"
+      why: "This helps us better estimate your health risks"
+      number: 'pounds'
     }
     dry_eyes: {
       title: "Do you have dry eyes?"
