@@ -18,7 +18,7 @@ class SwanKiosk.Controller
     else
       throw new Error "No route found for #{@constructor.name}##{action}"
 
-    @_render action()
+    @_render action.call(this)
 
   _getRoute: (route) ->
     if @_getRoutes().indexOf

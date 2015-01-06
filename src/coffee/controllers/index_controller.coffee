@@ -4,3 +4,4 @@ class SwanKiosk.Controllers.IndexController extends SwanKiosk.Controller
       contents:
         tag: 'h1'
         contents: 'Index'
+    @rendered = true

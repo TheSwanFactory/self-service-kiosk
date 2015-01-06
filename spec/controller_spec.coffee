@@ -5,10 +5,10 @@ describe 'SwanKiosk.Controller', ->
   controller::bodySelector = fixtureSelector
 
   class MockController extends controller
-    variable: []
+    variable: 'variable'
     index: sinon.spy()
     valid: sinon.spy()
-    real_action: -> 'Hello!'
+    real_action: -> @variable
     _invalid: ->
 
   describe '#_getRoutes()', ->
@@ -43,7 +43,7 @@ describe 'SwanKiosk.Controller', ->
     it 'renders contents', ->
       setup()
       ctrl._route 'real_action'
-      expect(fixtureDiv.html()).to.contain 'Hello!'
+      expect(fixtureDiv.html()).to.contain ctrl.variable
 
   describe '#_render()', ->
     beforeEach -> ctrl = new MockController()
