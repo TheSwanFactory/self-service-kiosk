@@ -1,18 +1,24 @@
 class SwanKiosk.Controller
-  @defaultAction: 'index'
+  defaultAction: 'index'
+  # selector for rendering
+  bodySelector: 'body'
 
-  constructor: (params = {}) ->
-    @params = params
-    @_route params.action || @constructor.defaultAction
+  constructor: (@params = {}) ->
+
+  # Routing
 
   _route: (action) ->
+    action = @params.action || @defaultAction unless action?
+
     if action in @_getRoutes()
-      this[action]()
-    else if this['show']?
+      action = this[action]
+    else if @show?
       @params.id = @params.action
-      this.show()
+      action = @show
     else
       throw new Error "No route found for #{@constructor.name}##{action}"
+
+    @_render action()
 
   _getRoute: (route) ->
     if @_getRoutes().indexOf
@@ -26,3 +32,8 @@ class SwanKiosk.Controller
              typeof this[route] isnt 'function'
         routes.push route
     routes
+
+  # Rendering
+
+  _render: (contents) ->
+    $(@bodySelector).html contents

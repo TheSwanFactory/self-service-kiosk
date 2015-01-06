@@ -1,8 +1,9 @@
 expect = chai.expect
 
 # setup fixture div
+window.fixtureSelector = '#fixture'
 $ ->
-  window.fixtureDiv = $("#fixture")
+  window.fixtureDiv = $ fixtureSelector
 afterEach ->
   fixtureDiv.empty()
 

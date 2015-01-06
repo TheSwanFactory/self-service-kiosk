@@ -2,17 +2,17 @@ describe 'SwanKiosk.Controller', ->
   controller = SwanKiosk.Controller
   ctrl       = null
 
+  controller::bodySelector = fixtureSelector
+
   class MockController extends controller
     variable: []
     index: sinon.spy()
     valid: sinon.spy()
     _invalid: ->
 
-
   describe '#_getRoutes()', ->
-    beforeEach -> ctrl = new MockController()
     routes = []
-    beforeEach -> routes = ctrl._getRoutes()
+    beforeEach -> routes = (new MockController())._getRoutes()
 
     it 'does not show constructor', ->
       expect(routes).to.not.include 'constructor'
@@ -27,10 +27,22 @@ describe 'SwanKiosk.Controller', ->
       expect(routes.sort()).to.deep.eq ['index', 'valid']
 
   describe '#_route()', ->
+    setup = (options = {}) -> ctrl = new MockController(options)
+
     it 'routes to action', ->
-      ctrl = new MockController action: 'valid', id: '2'
+      setup action: 'valid', id: '2'
+      ctrl._route()
       expect(ctrl.valid.called).to.eq true
 
     it 'routes to index otherwise', ->
-      ctrl = new MockController()
+      setup()
+      ctrl._route()
       expect(ctrl.index.called).to.eq true
+
+  describe '#_render()', ->
+    # patch controller body to make changes inside our fixture
+    beforeEach -> ctrl = new MockController()
+
+    it 'adds content to fixtureDiv', ->
+      ctrl._render '<div id="myTestDiv"></div>'
+      expect(fixtureDiv.find('#myTestDiv').length).to.eq 1
