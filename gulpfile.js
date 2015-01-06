@@ -66,7 +66,8 @@ var vendorJS = [
   bowerDir + '/viewport-units-buggyfill/viewport-units-buggyfill.js',
   bowerDir + '/tether/tether.js',
   bowerDir + '/lodash/dist/lodash.min.js',
-  bowerDir + '/jquery/dist/jquery.min.js'
+  bowerDir + '/jquery/dist/jquery.min.js',
+  bowerDir + '/page/page.js'
 ];
 
 var appCoffee = [
