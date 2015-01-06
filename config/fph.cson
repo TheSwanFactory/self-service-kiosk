@@ -1,40 +1,7 @@
-#
-# kiosk-config.cson
-#
-# This is an example kiosk configuration JSON file
-# written in [CoffeeScript](https://github.com/TheSwanFactory/hourofnode/wiki/CoffeeScript).
-#
-# Specifically, it is written in CoffeeScript Object Notation or
-# [CSON](https://github.com/bevry/cson), a streamlined alternative to JSON.
-#
-# Our plan is for these to be:
-# * created and edited via our web GUI
-# * stored in a NoSQL database
-# * imported to create dynamic Kiosk objects
-# * exported as static HTML pages (with associated JavaScript)
-# * packaged as offline Chrome app .crx archives
-
-# Key Features
-# ============
-#
-# * Home page screensaver
-# * Multiple question types (a la Google Forms)
-# * Conditional questions
-# * Save responses via email or database
-# * Display advertising via iframes
-
-# Question Types
-# ==============
-# * multiple (checkboxes)
-# * select (radio button)
-# * sentence (single line)
-# * paragraph (multi-line)
-# * email (validation)
-
 {
   owner: {
-    name: "Joe Random User"
-    email: "joe@self-service-kiosk.com"
+    name: "Jory Moon"
+    email: "jorymoon@gmail.com"
   }
   ads: [
     {kind: "video", name: "Acuvue", url: "http://youtu.be/Dg81rnLYZys" }
@@ -65,8 +32,21 @@
   questions: {
     sex: {
       title: "Gender"
-      why: "This helps us better estimate your health risks"
+      why: "Men and Women have different risk profiles for eye disease."
       select: {M: "Male", F: "Female", other: "Other"}
+    }
+    height: {
+      title: "Height"
+      why: "This helps us better estimate your health risks"
+      group: [
+        {digit: 'feet'}
+        {digit: 'inches'}
+      ]
+    }
+    weight: {
+      title: "Height"
+      why: "This helps us better estimate your health risks"
+      number: 'pounds'
     }
     dry_eyes: {
       title: "Do you have dry eyes?"
