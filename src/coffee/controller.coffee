@@ -8,6 +8,9 @@ class SwanKiosk.Controller
   _route: (action) ->
     if action in @_getRoutes()
       this[action]()
+    else if this['show']?
+      @params.id = @params.action
+      this.show()
     else
       console.error "No route found for #{action}"
 
