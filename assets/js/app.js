@@ -25,7 +25,7 @@ SwanKiosk = {
 $(SwanKiosk.init);
 
 $.ajax({
-  url: '/assets/config/kiosk-config.json',
+  url: 'assets/config/kiosk-config.json',
   async: false
 }).done(function(data) {
   return SwanKiosk.Config = data;
