@@ -69,6 +69,12 @@ ul, ol { display: inline-block; }
   .answer {
     @extend .button;
     @extend .button.xxlarge;
+    @extend .button.hollow;
+
+    &.selected {
+      @include button-style($style: solid);
+      border: 2px solid darken($primary-color, 10%);
+    }
   }
 }
 

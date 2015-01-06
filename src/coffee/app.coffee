@@ -3,6 +3,7 @@ SwanKiosk =
   Interpreters: {}
   Components:   {}
   Config:       {}
+  Store:        {}
   Controllers:
     _find: (name) ->
       _.find this, (value, key) ->

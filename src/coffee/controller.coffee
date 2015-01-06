@@ -41,8 +41,8 @@ class SwanKiosk.Controller
   _getBody: ->
     @_body ?= $(@bodySelector)
 
-  _render: (contents = {}) ->
-    return false if @rendered
+  _render: (contents) ->
+    return false if @rendered || !contents?
     @rendered = true
     if @layout
       contents = @layout contents
