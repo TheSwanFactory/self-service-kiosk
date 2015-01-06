@@ -36,12 +36,12 @@ class SwanKiosk.Controller
   # Rendering
 
   _getBody: ->
-    $ @bodySelector
+    $(@bodySelector)
 
   _render: (contents) ->
     return false if @rendered
     @rendered = true
-    @_getBody().html SwanKiosk.Layout.build(contents)
+    @_getBody().get(0).appendChild SwanKiosk.Layout.build(contents)
 
   _renderPlain: (contents) ->
     return false if @rendered
