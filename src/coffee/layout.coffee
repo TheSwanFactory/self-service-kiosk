@@ -63,12 +63,13 @@ class SwanKiosk.Layout
     ).join ''
 
   @buildContents: (element, options) ->
-    contents = options.contents
+    contents = options.contents || ''
     if _.isPlainObject(contents)
       contents = [contents]
     return @buildArray element, contents if _.isArray(contents)
 
-    if _.isString(contents)
+    if !(contents instanceof HTMLElement)
+      contents = contents.toString()
       contents = _.escape(contents) unless options.rawHtml
       contents = document.createTextNode contents
     element.appendChild contents
