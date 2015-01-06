@@ -8,6 +8,7 @@ describe 'SwanKiosk.Controller', ->
     variable: []
     index: sinon.spy()
     valid: sinon.spy()
+    real_action: -> 'Hello!'
     _invalid: ->
 
   describe '#_getRoutes()', ->
@@ -24,7 +25,7 @@ describe 'SwanKiosk.Controller', ->
       expect(routes).to.not.include 'variable'
 
     it 'does show public methods', ->
-      expect(routes.sort()).to.deep.eq ['index', 'valid']
+      expect(routes.sort()).to.deep.eq ['index', 'real_action', 'valid']
 
   describe '#_route()', ->
     setup = (options = {}) -> ctrl = new MockController(options)
@@ -39,10 +40,20 @@ describe 'SwanKiosk.Controller', ->
       ctrl._route()
       expect(ctrl.index.called).to.eq true
 
+    it 'renders contents', ->
+      ctrl._route 'real_action'
+      expect(fixtureDiv.html()).to.contain 'Hello!'
+
   describe '#_render()', ->
-    # patch controller body to make changes inside our fixture
+    beforeEach -> ctrl = new MockController()
+
+    it 'renders through layout engine', ->
+      ctrl._render contents: 'hello'
+      expect(fixtureDiv.find('*').length).to.eq 1
+
+  describe '#_renderPlain()', ->
     beforeEach -> ctrl = new MockController()
 
     it 'adds content to fixtureDiv', ->
-      ctrl._render '<div id="myTestDiv"></div>'
+      ctrl._renderPlain '<div id="myTestDiv"></div>'
       expect(fixtureDiv.find('#myTestDiv').length).to.eq 1

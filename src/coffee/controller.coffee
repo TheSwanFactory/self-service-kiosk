@@ -1,14 +1,14 @@
 class SwanKiosk.Controller
   defaultAction: 'index'
-  # selector for rendering
-  bodySelector: 'body'
+  bodySelector:  'body'
+  rendered:      false
 
   constructor: (@params = {}) ->
 
   # Routing
 
   _route: (action) ->
-    action = @params.action || @defaultAction unless action?
+    action = action || @params.action || @defaultAction
 
     if action in @_getRoutes()
       action = this[action]
@@ -35,5 +35,11 @@ class SwanKiosk.Controller
 
   # Rendering
 
+  _getBody: ->
+    $ @bodySelector
+
   _render: (contents) ->
-    $(@bodySelector).html contents
+    @_getBody().html SwanKiosk.Layout.build(contents)
+
+  _renderPlain: (contents) ->
+    @_getBody().html contents
