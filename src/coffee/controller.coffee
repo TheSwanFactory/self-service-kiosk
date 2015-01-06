@@ -12,7 +12,7 @@ class SwanKiosk.Controller
       @params.id = @params.action
       this.show()
     else
-      console.error "No route found for #{action}"
+      throw new Error "No route found for #{@constructor.name}##{action}"
 
   _getRoute: (route) ->
     if @_getRoutes().indexOf
