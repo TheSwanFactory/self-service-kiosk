@@ -56,7 +56,7 @@
   }
   questions: {
     sex: {
-      title: "Gender"
+      title: "What is your gender?"
       why: "This helps us better estimate your health risks"
       select: {M: "Male", F: "Female", other: "Other"}
     }
