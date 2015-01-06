@@ -39,7 +39,7 @@ class SwanKiosk.Controller
   # Rendering
 
   _getBody: ->
-    $(@bodySelector)
+    @_body ?= $(@bodySelector)
 
   _render: (contents) ->
     return false if @rendered
@@ -47,6 +47,7 @@ class SwanKiosk.Controller
     if @layout
       contents = @layout contents
     contents = SwanKiosk.Layout.build contents
+    @_getBody().html ''
     @_getBody().get(0).appendChild contents
 
   _renderPlain: (contents) ->
