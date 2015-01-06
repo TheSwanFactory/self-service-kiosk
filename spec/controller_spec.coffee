@@ -41,6 +41,7 @@ describe 'SwanKiosk.Controller', ->
       expect(ctrl.index.called).to.eq true
 
     it 'renders contents', ->
+      setup()
       ctrl._route 'real_action'
       expect(fixtureDiv.html()).to.contain 'Hello!'
 
@@ -51,9 +52,19 @@ describe 'SwanKiosk.Controller', ->
       ctrl._render contents: 'hello'
       expect(fixtureDiv.find('*').length).to.eq 1
 
+    it 'does not double render', ->
+      ctrl._render contents: 'goodbye'
+      ctrl._render contents: 'hello'
+      expect(fixtureDiv.html()).to.not.contain 'hello'
+
   describe '#_renderPlain()', ->
     beforeEach -> ctrl = new MockController()
 
     it 'adds content to fixtureDiv', ->
       ctrl._renderPlain '<div id="myTestDiv"></div>'
       expect(fixtureDiv.find('#myTestDiv').length).to.eq 1
+
+    it 'does not double render', ->
+      ctrl._renderPlain contents: 'goodbye'
+      ctrl._renderPlain contents: 'hello'
+      expect(fixtureDiv.html()).to.not.contain 'hello'
