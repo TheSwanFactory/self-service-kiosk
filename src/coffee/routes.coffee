@@ -1,12 +1,13 @@
 # requires page.js
 
 defaultRoute = (ctx) ->
-  controller = SwanKiosk.Controllers._find ctx.params.controller
+  controller = SwanKiosk.Controllers._find ctx.params.controller || 'index'
   return notFound() unless controller
-  SwanKiosk.Create controller, ctx.params
+  SwanKiosk.create controller, ctx.params
 
 notFound = ->
   $('body').html '404d!'
 
-page '/:controller/:action/:id', defaultRoute
+page '/:controller/:action/:id?', defaultRoute
+page '', defaultRoute
 page '*', notFound
