@@ -8,7 +8,8 @@ SwanKiosk.Components =
   verticalCenter: (dictionary) ->
     dictionary.class ?= ''
     dictionary.class += ' grid-block vertical align-center'
-    @center dictionary
+    dictionary.contents = @center dictionary.contents
+    dictionary
 
   link: (contents, href = '#', options = {}) ->
     if _.isPlainObject(href) and _.isEqual(options, {})

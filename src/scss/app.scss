@@ -27,7 +27,39 @@ ul, ol { display: inline-block; }
   background-color: $gray-light;
   padding:          $global-padding;
 
-  .why { margin: 0; }
+  @include grid-block(
+    $wrap: true,
+    $size: shrink
+  );
+
+  @include breakpoint(small) {
+    @include grid-orient(vertical);
+  }
+
+  @include breakpoint(medium) {
+    @include grid-orient(horizontal);
+  }
+
+  .question {
+    @include grid-content;
+
+    @include breakpoint(small) {
+      @include grid-size(12);
+    }
+
+    @include breakpoint(medium) {
+      @include grid-content(
+        $size: 6,
+        $offset: 3
+      );
+    }
+  }
+
+  .why {
+    margin: 0;
+    @extend .button;
+    @extend .button.round;
+  }
 }
 
 .body {
@@ -44,6 +76,7 @@ ul, ol { display: inline-block; }
   background-color: $gray;
   padding-top:      $global-padding;
   @extend           .text-center;
+  @include grid-block($size: shrink, $wrap: true);
 
   .start-over {
     @include grid-content($size: 12, $order: 2);
