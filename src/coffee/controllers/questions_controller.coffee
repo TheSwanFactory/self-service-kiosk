@@ -17,13 +17,7 @@ class SwanKiosk.Controllers.QuestionsController extends SwanKiosk.Controller
       page '/questions/results'
 
   results: ->
-    console.log 'helo!'
-    console.log SwanKiosk.Store.answers
-    {
-      tag: 'pre'
-      rawHtml: true
-      contents: JSON.stringify(SwanKiosk.Store.answers || {})
-    }
+    new SwanKiosk.Interpreters.Results SwanKiosk.Store.answers
 
   _selectOption: (value, event) ->
     $answer = $ event.target
