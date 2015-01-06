@@ -76,6 +76,12 @@ ul, ol { display: inline-block; }
       border: 2px solid darken($primary-color, 10%);
     }
   }
+
+  .results {
+    td {
+      padding: $global-padding;
+    }
+  }
 }
 
 .navigation {

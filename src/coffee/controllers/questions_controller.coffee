@@ -12,19 +12,12 @@ class SwanKiosk.Controllers.QuestionsController extends SwanKiosk.Controller
     @questionKey = Object.keys(SwanKiosk.Config.questions)[@id]
     question = SwanKiosk.Config.questions[@questionKey]
     if question?
-      question = new SwanKiosk.Interpreters.Question question
-      question.get()
+      new SwanKiosk.Interpreters.Question question
     else
       page '/questions/results'
 
   results: ->
-    console.log 'helo!'
-    console.log SwanKiosk.Store.answers
-    {
-      tag: 'pre'
-      rawHtml: true
-      contents: JSON.stringify(SwanKiosk.Store.answers || {})
-    }
+    new SwanKiosk.Interpreters.Results SwanKiosk.Store.answers
 
   _selectOption: (value, event) ->
     $answer = $ event.target
@@ -41,4 +34,9 @@ class SwanKiosk.Controllers.QuestionsController extends SwanKiosk.Controller
     page "/questions/#{@id + 1}"
 
   _prevQuestion: ->
+    page "/questions/#{@id - 1}"
+
+  _startOver: ->
+    SwanKiosk.Store.answers = {}
+    page '/questions/0'
 
