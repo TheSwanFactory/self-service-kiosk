@@ -12,13 +12,6 @@ class SwanKiosk.Interpreters.Question extends SwanKiosk.Interpreter
   questionOption: (option, value) ->
     {tag: 'a', class: 'answer', contents: option, value: value}
 
-  interpretBody: ->
-    options = _.map @dictionary.select, @questionOption
-    {
-      class:    'body'
-      contents: SwanKiosk.Components.center(options)
-    }
-
   interpretHeader: ->
     class:    'header'
     contents: [{
@@ -28,6 +21,13 @@ class SwanKiosk.Interpreters.Question extends SwanKiosk.Interpreter
       class:    'why-wrapper',
       contents: {tag: 'a', class: 'why', contents: @why, title: @dictionary.why}
     })]
+
+  interpretBody: ->
+    options = _.map @dictionary.select, @questionOption
+    {
+      class:    'body'
+      contents: SwanKiosk.Components.center(options)
+    }
 
   interpretNavigation: ->
     class:    'navigation',
