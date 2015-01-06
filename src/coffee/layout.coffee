@@ -1,8 +1,9 @@
 class SwanKiosk.Layout
-  @specialAttributes = ['contents', 'tag', 'rawHtml']
+  @specialAttributes = ['contents', 'tag', 'rawHtml', '_context']
   @defaultTag        = 'div'
   # Top level function for turning an object into HTML
   @build: (layout = {}) =>
+    @context = layout._context || null
     @setDefaults layout
     @buildTag layout
 
@@ -54,8 +55,12 @@ class SwanKiosk.Layout
       element.setAttribute key, value
 
   @addEventListeners: (element, events) ->
-    for name, func of events
-      element.addEventListener name, func
+    if @context
+      for name, func of events
+        element.addEventListener name, func.bind(@context)
+    else
+      for name, func of events
+        element.addEventListener name, func
 
   @buildStyleAttribute: (style) ->
     _(style).map((value, key) ->
