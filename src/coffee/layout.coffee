@@ -1,5 +1,5 @@
 class SwanKiosk.Layout
-  @specialAttributes = ['contents', 'tag', 'rawHtml', 'events']
+  @specialAttributes = ['contents', 'tag', 'rawHtml']
   @defaultTag        = 'div'
   # Top level function for turning an object into HTML
   @build: (layout = {}) =>
@@ -48,7 +48,7 @@ class SwanKiosk.Layout
         if key == 'style'
           value = @buildStyleAttribute value
         else if key == 'events'
-          return @addEventListeners element, attribute
+          return @addEventListeners element, value
         else
           value = JSON.stringify value
       element.setAttribute key, value
