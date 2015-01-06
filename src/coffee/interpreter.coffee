@@ -46,7 +46,11 @@ class SwanKiosk.Interpreters.Question extends SwanKiosk.Interpreter
     class:    'navigation',
     contents: [{
       class:    'start-over'
-      contents: {tag: 'a', contents: 'Start Over'}
+      contents:
+        tag: 'a'
+        contents: 'Start Over'
+        events:
+          click: -> @_startOver()
     }, {
       class:    'change-page',
       contents: [

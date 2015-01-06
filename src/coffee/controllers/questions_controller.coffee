@@ -42,3 +42,7 @@ class SwanKiosk.Controllers.QuestionsController extends SwanKiosk.Controller
 
   _prevQuestion: ->
 
+  _startOver: ->
+    SwanKiosk.Store.answers = {}
+    page '/questions/0'
+
