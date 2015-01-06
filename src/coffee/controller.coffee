@@ -2,19 +2,22 @@ class SwanKiosk.Controller
   defaultAction: 'index'
   bodySelector:  'body'
   rendered:      false
+  layout:        false
 
   constructor: (@params = {}) ->
 
   # Routing
 
   _route: (action) ->
-    action = action || @params.action || @defaultAction
+    action = action || @params.action
 
     if action in @_getRoutes()
       action = this[action]
     else if @show?
       @params.id = @params.action
       action = @show
+    else if !action?
+      action = this[@defaultAction]
     else
       throw new Error "No route found for #{@constructor.name}##{action}"
 
@@ -41,7 +44,10 @@ class SwanKiosk.Controller
   _render: (contents) ->
     return false if @rendered
     @rendered = true
-    @_getBody().get(0).appendChild SwanKiosk.Layout.build(contents)
+    if @layout
+      contents = @layout contents
+    contents = SwanKiosk.Layout.build contents
+    @_getBody().get(0).appendChild contents
 
   _renderPlain: (contents) ->
     return false if @rendered
