@@ -19,3 +19,8 @@ SwanKiosk.Components =
       contents: contents
       href:     href
     }, options)
+
+  layout: (contents) ->
+    class: 'grid-frame vertical'
+    contents: contents
+
