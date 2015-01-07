@@ -49,8 +49,8 @@ class SwanKiosk.Controller
       contents = @layout contents
     contents._context = this
     contents = SwanKiosk.Layout.build contents
-    @_getBody().html ''
-    @_getBody().get(0).appendChild contents
+    @_getBody().empty()
+    @_getBody().append contents
 
   _renderPlain: (contents) ->
     return false if @rendered
