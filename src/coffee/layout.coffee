@@ -55,12 +55,12 @@ class SwanKiosk.Layout
       element.setAttribute key, value
 
   @addEventListeners: (element, events) ->
-    if @context
-      for name, func of events
-        element.addEventListener name, func.bind(@context)
-    else
-      for name, func of events
-        element.addEventListener name, func
+    context = @context || this
+    for name, func of events
+      if typeof func != 'function'
+        str = "this.#{func}"
+        func = (event) -> eval(str).call(this, element, event)
+      element.addEventListener name, func.bind(context)
 
   @buildStyleAttribute: (style) ->
     _(style).map((value, key) ->
