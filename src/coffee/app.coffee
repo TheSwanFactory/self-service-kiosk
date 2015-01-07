@@ -1,18 +1,22 @@
 # Initialize all namespaces
-SwanKiosk =
-  Interpreters: {}
-  Components:   {}
-  Config:       {}
-  Store:        {}
-  Controllers:
+class SwanKiosk
+  @Interpreters: {}
+  @Components:   {}
+  @Config:       {}
+  @Store:        {}
+  @Controllers:
     _find: (name) ->
       _.find this, (value, key) ->
-        key.split('Controller')[0].toLowerCase() == name
+        key.split('Controller')[0].toLowerCase() == name.toLowerCase()
 
-  create: (klass, args) ->
+  @create: (klass, args) ->
     new klass args
 
-  init: ->
+  _instances = {}
+  @singleton: (klass, args) ->
+    _instances[klass.name] ?= @create(klass, args)
+
+  @init: ->
     page hashbang: true # setup router
 
 # on page load
