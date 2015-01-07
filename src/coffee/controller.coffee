@@ -5,6 +5,11 @@ class SwanKiosk.Controller
   layout:        false
 
   constructor: (@params = {}) ->
+    @_afterInitialize()
+
+  # Callbacks
+
+  _afterInitialize: ->
 
   # Routing
 
