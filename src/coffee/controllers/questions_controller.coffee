@@ -1,6 +1,10 @@
 class SwanKiosk.Controllers.QuestionsController extends SwanKiosk.Controller
   layout: SwanKiosk.Components.layout
 
+  # Routes
+
+  routes: ['index', 'show', 'results']
+
   index: ->
     [{
       tag: 'h1'
@@ -8,35 +12,37 @@ class SwanKiosk.Controllers.QuestionsController extends SwanKiosk.Controller
     }]
 
   show: ->
-    @id = parseInt(@params.id, 10) || 0
-    @questionKey = Object.keys(SwanKiosk.Config.questions)[@id]
+    @id =  parseInt(@params.id, 10) || 1
+    @questionKey = Object.keys(SwanKiosk.Config.questions)[@id - 1]
     question = SwanKiosk.Config.questions[@questionKey]
     if question?
       new SwanKiosk.Interpreters.Question question
     else
-      page '/questions/results'
+      page.redirect '/questions/results'
 
   results: ->
     new SwanKiosk.Interpreters.Results SwanKiosk.Store.answers
 
-  _selectOption: (value, event) ->
-    $answer = $ event.target
+  # Actions
+
+  selectOption: (element, event) ->
+    $answer = $ element
     $answer.siblings().removeClass 'selected'
     $answer.addClass 'selected'
-    @answer = value
+    @answer = $answer.attr 'value'
 
-  _nextQuestion: ->
-    @_storeAnwer()
+  nextQuestion: (element, event) ->
+    @storeAnswer()
+    page.redirect "/questions/#{@id + 1}"
 
-  _storeAnwer: ->
+  storeAnswer: ->
     SwanKiosk.Store.answers ?= {}
     SwanKiosk.Store.answers[@questionKey] = @answer
-    page "/questions/#{@id + 1}"
 
-  _prevQuestion: ->
-    page "/questions/#{@id - 1}"
+  prevQuestion: (element, event) ->
+    page.redirect "/questions/#{@id - 1}"
 
-  _startOver: ->
+  startOver: (element, event) ->
     SwanKiosk.Store.answers = {}
-    page '/questions/0'
+    page.redirect '/questions/1'
 
