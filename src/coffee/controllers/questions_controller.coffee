@@ -1,5 +1,12 @@
 class SwanKiosk.Controllers.QuestionsController extends SwanKiosk.Controller
   layout: SwanKiosk.Components.layout
+  storeKey: 'question.answers'
+
+  # Callbacks
+
+  _afterInitialize: ->
+    @store   = new SwanKiosk.Store.LocalStorage
+    @answers = @store.getObject(@storeKey) || {}
 
   # Routes
 
@@ -15,13 +22,14 @@ class SwanKiosk.Controllers.QuestionsController extends SwanKiosk.Controller
     @id =  parseInt(@params.id, 10) || 1
     @questionKey = Object.keys(SwanKiosk.Config.questions)[@id - 1]
     question = SwanKiosk.Config.questions[@questionKey]
+    @answer = @answers[@questionKey]
     if question?
-      new SwanKiosk.Interpreters.Question question
+      new SwanKiosk.Interpreters.Question question, @answer
     else
       page.redirect '/questions/results'
 
   results: ->
-    new SwanKiosk.Interpreters.Results SwanKiosk.Store.answers
+    new SwanKiosk.Interpreters.Results @answers
 
   # Actions
 
@@ -36,8 +44,8 @@ class SwanKiosk.Controllers.QuestionsController extends SwanKiosk.Controller
     page.redirect "/questions/#{@id + 1}"
 
   storeAnswer: ->
-    SwanKiosk.Store.answers ?= {}
-    SwanKiosk.Store.answers[@questionKey] = @answer
+    @answers[@questionKey] = @answer
+    @store.set @storeKey, @answers
 
   prevQuestion: (element, event) ->
     page.redirect "/questions/#{@id - 1}"

@@ -3,6 +3,9 @@ class SwanKiosk.Interpreter extends SwanKiosk.World
 class SwanKiosk.Interpreters.Question extends SwanKiosk.Interpreter
   why: 'Why are we asking this question?'
 
+  constructor: (@dictionary, @answer) ->
+    super @dictionary
+
   header:     -> @_header     ?= @interpretHeader()
   body:       -> @_body       ?= @interpretBody()
   navigation: -> @_navigation ?= @interpretNavigation()
@@ -11,7 +14,7 @@ class SwanKiosk.Interpreters.Question extends SwanKiosk.Interpreter
 
   questionOption: (option, value) ->
     tag:      'a'
-    class:    'answer'
+    class:    "answer #{'selected' if value == @answer}"
     contents: option
     value:    value
     events:
@@ -28,7 +31,7 @@ class SwanKiosk.Interpreters.Question extends SwanKiosk.Interpreter
     })]
 
   interpretBody: ->
-    options = _.map @dictionary.select, @questionOption
+    options = _.map @dictionary.select, @questionOption, this
     {
       class:    'body'
       contents: SwanKiosk.Components.center(options)
