@@ -29,7 +29,7 @@ class SwanKiosk.Controllers.QuestionsController extends SwanKiosk.Controller
     $answer = $ element
     $answer.siblings().removeClass 'selected'
     $answer.addClass 'selected'
-    @answer = $answer.val()
+    @answer = $answer.attr 'value'
 
   nextQuestion: (element, event) ->
     @storeAnswer()
