@@ -127,6 +127,9 @@ SwanKiosk.Controller = (function() {
 
   Controller.prototype._getRoutes = function() {
     var route, routes;
+    if (this.routes != null) {
+      return this.routes;
+    }
     routes = [];
     for (route in this) {
       if (!(route === 'constructor' || route.match(/^_/) || typeof this[route] !== 'function')) {
@@ -153,8 +156,8 @@ SwanKiosk.Controller = (function() {
     }
     contents._context = this;
     contents = SwanKiosk.Layout.build(contents);
-    this._getBody().html('');
-    return this._getBody().get(0).appendChild(contents);
+    this._getBody().empty();
+    return this._getBody().append(contents);
   };
 
   Controller.prototype._renderPlain = function(contents) {
@@ -215,9 +218,7 @@ SwanKiosk.Interpreters.Question = (function(_super) {
       contents: option,
       value: value,
       events: {
-        click: function(e) {
-          return this._selectOption(value, e);
-        }
+        click: 'selectOption'
       }
     };
   };
@@ -259,17 +260,13 @@ SwanKiosk.Interpreters.Question = (function(_super) {
     prevOptions = {
       "class": 'previous',
       events: {
-        click: function() {
-          return this._prevQuestion();
-        }
+        click: 'prevQuestion'
       }
     };
     nextOptions = {
       "class": 'next',
       events: {
-        click: function() {
-          return this._nextQuestion();
-        }
+        click: 'nextQuestion'
       }
     };
     return {
@@ -281,9 +278,7 @@ SwanKiosk.Interpreters.Question = (function(_super) {
             tag: 'a',
             contents: 'Start Over',
             events: {
-              click: function() {
-                return this._startOver();
-              }
+              click: 'startOver'
             }
           }
         }, {
@@ -379,22 +374,20 @@ SwanKiosk.Layout = (function() {
   };
 
   Layout.addEventListeners = function(element, events) {
-    var func, name, _results, _results1;
-    if (this.context) {
-      _results = [];
-      for (name in events) {
-        func = events[name];
-        _results.push(element.addEventListener(name, func.bind(this.context)));
+    var context, func, name, str, _results;
+    context = this.context || this;
+    _results = [];
+    for (name in events) {
+      func = events[name];
+      if (typeof func !== 'function') {
+        str = "this." + func;
+        func = function(event) {
+          return eval(str).call(this, element, event);
+        };
       }
-      return _results;
-    } else {
-      _results1 = [];
-      for (name in events) {
-        func = events[name];
-        _results1.push(element.addEventListener(name, func));
-      }
-      return _results1;
+      _results.push(element.addEventListener(name, func.bind(context)));
     }
+    return _results;
   };
 
   Layout.buildStyleAttribute = function(style) {
@@ -611,6 +604,8 @@ SwanKiosk.Controllers.QuestionsController = (function(_super) {
 
   QuestionsController.prototype.layout = SwanKiosk.Components.layout;
 
+  QuestionsController.prototype.routes = ['index', 'show', 'results'];
+
   QuestionsController.prototype.index = function() {
     return [
       {
@@ -622,13 +617,13 @@ SwanKiosk.Controllers.QuestionsController = (function(_super) {
 
   QuestionsController.prototype.show = function() {
     var question;
-    this.id = parseInt(this.params.id, 10) || 0;
-    this.questionKey = Object.keys(SwanKiosk.Config.questions)[this.id];
+    this.id = parseInt(this.params.id, 10) || 1;
+    this.questionKey = Object.keys(SwanKiosk.Config.questions)[this.id - 1];
     question = SwanKiosk.Config.questions[this.questionKey];
     if (question != null) {
       return new SwanKiosk.Interpreters.Question(question);
     } else {
-      return page('/questions/results');
+      return page.redirect('/questions/results');
     }
   };
 
@@ -636,34 +631,34 @@ SwanKiosk.Controllers.QuestionsController = (function(_super) {
     return new SwanKiosk.Interpreters.Results(SwanKiosk.Store.answers);
   };
 
-  QuestionsController.prototype._selectOption = function(value, event) {
+  QuestionsController.prototype.selectOption = function(element, event) {
     var $answer;
-    $answer = $(event.target);
+    $answer = $(element);
     $answer.siblings().removeClass('selected');
     $answer.addClass('selected');
-    return this.answer = value;
+    return this.answer = $answer.attr('value');
   };
 
-  QuestionsController.prototype._nextQuestion = function() {
-    return this._storeAnwer();
+  QuestionsController.prototype.nextQuestion = function(element, event) {
+    this.storeAnswer();
+    return page.redirect("/questions/" + (this.id + 1));
   };
 
-  QuestionsController.prototype._storeAnwer = function() {
+  QuestionsController.prototype.storeAnswer = function() {
     var _base;
     if ((_base = SwanKiosk.Store).answers == null) {
       _base.answers = {};
     }
-    SwanKiosk.Store.answers[this.questionKey] = this.answer;
-    return page("/questions/" + (this.id + 1));
+    return SwanKiosk.Store.answers[this.questionKey] = this.answer;
   };
 
-  QuestionsController.prototype._prevQuestion = function() {
-    return page("/questions/" + (this.id - 1));
+  QuestionsController.prototype.prevQuestion = function(element, event) {
+    return page.redirect("/questions/" + (this.id - 1));
   };
 
-  QuestionsController.prototype._startOver = function() {
+  QuestionsController.prototype.startOver = function(element, event) {
     SwanKiosk.Store.answers = {};
-    return page('/questions/0');
+    return page.redirect('/questions/1');
   };
 
   return QuestionsController;
