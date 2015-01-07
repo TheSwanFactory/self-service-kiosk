@@ -2,6 +2,8 @@ class SwanKiosk.Store.LocalStorage extends SwanKiosk.Store
   set: (key, value) ->
     return @setMany(key) if typeof key == 'object'
 
+    value = JSON.stringify(value) if typeof value == 'object'
+
     localStorage[key] = value
 
   setMany: (properties) ->
@@ -26,7 +28,8 @@ class SwanKiosk.Store.LocalStorage extends SwanKiosk.Store
     values.push(@get key) for key in keys
     values
 
-  getObject: (keys) ->
-    values = {}
-    values[key] = @get(key) for key in keys
-    values
+  getObject: (key) ->
+    try
+      JSON.parse @get(key)
+    catch
+      undefined

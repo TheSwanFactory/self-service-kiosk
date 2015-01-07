@@ -35,5 +35,6 @@ describe 'SwanKiosk.Store.LocalStorage', ->
 
   describe '#getObject()', ->
     it 'works', ->
-      store.set her: 'him', she: 'he'
-      expect(store.getObject ['her', 'she']).to.eql {her: 'him', she: 'he'}
+      obj = {king: 'queen', prince: 'princess'}
+      store.set obj: obj
+      expect(store.getObject 'obj').to.eql obj
