@@ -1,6 +1,10 @@
 class SwanKiosk.Controllers.QuestionsController extends SwanKiosk.Controller
   layout: SwanKiosk.Components.layout
 
+  # Routes
+
+  routes: ['index', 'show', 'results']
+
   index: ->
     [{
       tag: 'h1'
@@ -19,24 +23,26 @@ class SwanKiosk.Controllers.QuestionsController extends SwanKiosk.Controller
   results: ->
     new SwanKiosk.Interpreters.Results SwanKiosk.Store.answers
 
-  _selectOption: (element, event) ->
+  # Actions
+
+  selectOption: (element, event) ->
     $answer = $ element
     $answer.siblings().removeClass 'selected'
     $answer.addClass 'selected'
     @answer = $answer.val()
 
-  _nextQuestion: (element, event) ->
-    @_storeAnwer()
+  nextQuestion: (element, event) ->
+    @storeAnswer()
     page.redirect "/questions/#{@id + 1}"
 
-  _storeAnwer: ->
+  storeAnswer: ->
     SwanKiosk.Store.answers ?= {}
     SwanKiosk.Store.answers[@questionKey] = @answer
 
-  _prevQuestion: (element, event) ->
+  prevQuestion: (element, event) ->
     page.redirect "/questions/#{@id - 1}"
 
-  _startOver: (element, event) ->
+  startOver: (element, event) ->
     SwanKiosk.Store.answers = {}
     page.redirect '/questions/1'
 

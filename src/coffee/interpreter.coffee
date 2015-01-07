@@ -15,7 +15,7 @@ class SwanKiosk.Interpreters.Question extends SwanKiosk.Interpreter
     contents: option
     value:    value
     events:
-      click: '_selectOption'
+      click: 'selectOption'
 
   interpretHeader: ->
     class:    'header'
@@ -38,11 +38,11 @@ class SwanKiosk.Interpreters.Question extends SwanKiosk.Interpreter
     prevOptions =
       class: 'previous'
       events:
-        click: '_prevQuestion'
+        click: 'prevQuestion'
     nextOptions =
       class: 'next'
       events:
-        click: '_nextQuestion'
+        click: 'nextQuestion'
     class:    'navigation',
     contents: [{
       class:    'start-over'
@@ -50,7 +50,7 @@ class SwanKiosk.Interpreters.Question extends SwanKiosk.Interpreter
         tag: 'a'
         contents: 'Start Over'
         events:
-          click: '_startOver'
+          click: 'startOver'
     }, {
       class:    'change-page',
       contents: [

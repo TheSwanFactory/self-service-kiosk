@@ -27,7 +27,12 @@ class SwanKiosk.Controller
     if @_getRoutes().indexOf
       console.log
 
+  # Get routes for this controller. Can be defined manually, or router will
+  # follow javascript convention and only return functions that do not start
+  # with an underscore (meaning private)
   _getRoutes: ->
+    return @routes if @routes?
+
     routes = []
     for route of this
       unless route == 'constructor' or
