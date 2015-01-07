@@ -1,4 +1,4 @@
-notDefined = (method) -> "#{method} has not been defined"
+notDefined = (method) -> "#{method} should be defined by a child class"
 
 # this is a dummy class to define the interface
 class SwanKiosk.Store

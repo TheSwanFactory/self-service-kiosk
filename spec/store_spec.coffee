@@ -1,4 +1,4 @@
-describe.only 'SwanKiosk.Store', ->
+describe 'SwanKiosk.Store', ->
   store = SwanKiosk.Store
 
   describe 'construction', ->
@@ -11,7 +11,7 @@ describe.only 'SwanKiosk.Store', ->
     storage = new store()
     shouldDefine = (method) ->
       it method, ->
-        expect(storage[method]).to.throw /not been defined/
+        expect(storage[method]).to.throw /should be defined by/
 
     shouldDefine 'get'
     shouldDefine 'set'
