@@ -1,9 +1,14 @@
 class SwanKiosk.Layout
-  @specialAttributes = ['contents', 'tag', 'rawHtml', '_context']
   @defaultTag        = 'div'
+  @specialAttributes = ['contents', 'tag', 'rawHtml', '_context']
+  @handledAttributes = {}
+  @handledKeys: -> Object.keys @handledAttributes
+
+  @registerAttribute: (attribute, func) ->
+
   # Top level function for turning an object into HTML
   @build: (layout = {}) =>
-    @context = layout._context || null
+    @context = layout._context || this
     @setDefaults layout
     @buildTag layout
 
@@ -37,35 +42,25 @@ class SwanKiosk.Layout
     "<#{options.tag}#{attributes}>"
 
   @buildAttributes: (element, options) ->
+    @buildHandledAttributes element, options
     _(Object.keys options)
-      .difference(@specialAttributes) # remove specialAttributes
+      .difference(@specialAttributes.concat(@handledKeys()))
       .map(@buildSingleAttribute(element, options), this)
+
+  @buildHandledAttributes: (element, options) ->
+    keys = _.intersection @handledKeys(), Object.keys(options)
+    @handleAttribute(key, element, options) for key in keys
+
+  @handleAttribute: (key, element, options) ->
+    @handledAttributes[key].call @context, options[key], element, options
 
   @buildSingleAttribute: (element, options) ->
     (attribute) ->
       key   = SwanKiosk.Utils.dasherize attribute
       value = options[attribute]
       if _.isObject value
-        if key == 'style'
-          value = @buildStyleAttribute value
-        else if key == 'events'
-          return @addEventListeners element, value
-        else
-          value = JSON.stringify value
+        value = JSON.stringify value
       element.setAttribute key, value
-
-  @addEventListeners: (element, events) ->
-    context = @context || this
-    for name, func of events
-      if typeof func != 'function'
-        str = "this.#{func}"
-        func = (event) -> eval(str).call(this, element, event)
-      element.addEventListener name, func.bind(context)
-
-  @buildStyleAttribute: (style) ->
-    _(style).map((value, key) ->
-      "#{SwanKiosk.Utils.dasherize key}: #{value};"
-    ).join ''
 
   @buildContents: (element, options) ->
     contents = options.contents || ''
