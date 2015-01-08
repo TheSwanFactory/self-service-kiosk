@@ -1,4 +1,6 @@
 class SwanKiosk.Interpreters.Results extends SwanKiosk.Interpreter
+  config = SwanKiosk.Config
+
   get: ->
     class: 'body'
     contents:
@@ -23,16 +25,25 @@ class SwanKiosk.Interpreters.Results extends SwanKiosk.Interpreter
     }
     {
       tag: 'tbody'
-      contents: _.map(@dictionary, @answerRow)
+      contents: _.map(@dictionary, @answerRow, this)
     }]
 
   answerRow: (value, key) ->
-    tag: 'tr'
-    contents: [{
-      tag: 'td'
-      contents: SwanKiosk.Config.questions[key].title
-    }
+    question = _.find config.questions, key: key
     {
-      tag: 'td'
-      contents: SwanKiosk.Config.questions[key].select[value]
-    }]
+      tag: 'tr'
+      contents: [{
+        tag: 'td'
+        contents: question?.title
+      }
+      {
+        tag: 'td'
+        contents: @getAnswer(question, value)
+      }]
+    }
+
+  getAnswer: (question, value) ->
+    if question? && 'select' of question
+      question.select[value]
+    else
+      value

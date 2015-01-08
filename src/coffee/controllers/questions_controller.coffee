@@ -1,31 +1,28 @@
 class SwanKiosk.Controllers.QuestionsController extends SwanKiosk.Controller
-  layout: SwanKiosk.Components.layout
-  storeKey: 'question.answers'
+  layout:         SwanKiosk.Components.layout
+  storeKey:       'question.answers'
+  lowIndex:       0
+  defaultAnswers: -> {}
+  selectedClass:  'selected'
 
   # Callbacks
 
   _afterInitialize: ->
     @store   = new SwanKiosk.Store.LocalStorage
     @config  = SwanKiosk.Config
-    @answers = @store.getObject(@storeKey) || {}
+    @answers = @store.getObject(@storeKey) || @defaultAnswers()
 
   # Routes
 
-  routes: ['index', 'show', 'results']
-
-  index: ->
-    [{
-      tag: 'h1'
-      contents: 'Questions'
-    }]
+  routes: ['show', 'results']
 
   show: ->
-    @id =  parseInt(@params.id, 10) || 1
+    @id = parseInt(@params.id, 10) || @lowIndex
     @questions = @config.questions
-    @questionKey = Object.keys(@questions)[@id - 1]
-    question = @questions[@questionKey]
-    @answer = @answers[@questionKey]
+    question = @questions[@id]
     if question?
+      @questionKey = question.key
+      @answer = @answers[@questionKey]
       new SwanKiosk.Interpreters.Question question, @answer
     else
       page.redirect '/questions/results'
@@ -37,8 +34,8 @@ class SwanKiosk.Controllers.QuestionsController extends SwanKiosk.Controller
 
   selectOption: (element, event) ->
     $answer = $ element
-    $answer.siblings().removeClass 'selected'
-    $answer.addClass 'selected'
+    $answer.siblings().removeClass @selectedClass
+    $answer.addClass @selectedClass
     @answer = $answer.attr 'value'
 
   nextQuestion: (element, event) ->
@@ -53,12 +50,12 @@ class SwanKiosk.Controllers.QuestionsController extends SwanKiosk.Controller
     page.redirect "/questions/#{@id - 1}"
 
   hasPreviousQuestion: ->
-    @id > 1
+    @id > 0
 
   startOver: (element, event) ->
     @clearAnswers()
-    page.redirect '/questions/1'
+    page.redirect "/questions/#{@lowIndex}"
 
   clearAnswers: ->
-    @store.set @storeKey, {}
+    @store.set @storeKey, @defaultAnswers()
 
