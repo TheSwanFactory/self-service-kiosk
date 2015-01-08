@@ -144,10 +144,21 @@ describe 'SwanKiosk.Layout', ->
       it 'builds attribute', ->
         expect(attributeValue).to.eq JSON.stringify(options.json)
 
+  describe 'handled attributes', ->
+    element = document.createElement 'div'
+    context = null
+    object  = {}
+    layout.handledAttributes.mock = -> context = this
+
+    it 'uses appropriate context', ->
+      layout.context = object
+      layout.buildHandledAttributes element, {mock: ''}
+      expect(context).to.eql object
+
   describe '.addEventListeners()', ->
     element = document.createElement 'div'
     events  = {click: sinon.spy()}
-    beforeEach -> layout.addEventListeners element, events
+    beforeEach -> layout.handledAttributes.events events, element
 
     it 'adds events properly', ->
       evt = document.createEvent 'HTMLEvents'
@@ -156,11 +167,12 @@ describe 'SwanKiosk.Layout', ->
       expect(events.click.called).to.eq true
 
   describe '.buildStyleAttribute()', ->
+    element = document.createElement 'div'
     style = {max_width: '500px', background_color: 'white', 'min-width': '10px'}
     built = null
-    beforeEach -> built = layout.buildStyleAttribute(style)
+    beforeEach -> built = layout.handledAttributes.style(style, element)
 
     it 'builds attribute', ->
-      expect(built).to.eq(
+      expect(element.getAttribute 'style').to.eq(
         'max-width: 500px;background-color: white;min-width: 10px;'
       )
