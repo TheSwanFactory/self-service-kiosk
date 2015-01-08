@@ -1,4 +1,7 @@
 SwanKiosk.Layout.handledAttributes.visible = (expression, element, dictionary) ->
   dictionary.style ?= {}
-  unless eval(expression)
+  expression = eval expression
+  expression = expression.call(this) if typeof expression == 'function'
+  unless expression
     dictionary.style.display = 'none'
+    SwanKiosk.Layout.handleAttribute 'style', element, dictionary

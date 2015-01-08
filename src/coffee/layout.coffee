@@ -49,8 +49,10 @@ class SwanKiosk.Layout
 
   @buildHandledAttributes: (element, options) ->
     keys = _.intersection @handledKeys(), Object.keys(options)
-    for key in keys
-      @handledAttributes[key].call @context, options[key], element, options
+    @handleAttribute(key, element, options) for key in keys
+
+  @handleAttribute: (key, element, options) ->
+    @handledAttributes[key].call @context, options[key], element, options
 
   @buildSingleAttribute: (element, options) ->
     (attribute) ->
