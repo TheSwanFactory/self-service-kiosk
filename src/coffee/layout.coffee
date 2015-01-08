@@ -1,8 +1,6 @@
 class SwanKiosk.Layout
   @defaultTag        = 'div'
   @specialAttributes = ['contents', 'tag', 'rawHtml', '_context']
-  @handledAttributes = {}
-  @handledKeys: -> Object.keys @handledAttributes
 
   @registerAttribute: (attribute, func) ->
 
@@ -46,6 +44,15 @@ class SwanKiosk.Layout
     _(Object.keys options)
       .difference(@specialAttributes.concat(@handledKeys()))
       .map(@buildSingleAttribute(element, options), this)
+
+
+  # Handled attributes
+
+  @handledAttributes = {}
+  @handledKeys: -> Object.keys @handledAttributes
+
+  @handle: (attribute, func) ->
+    @handledAttributes[attribute] = func
 
   @buildHandledAttributes: (element, options) ->
     keys = _.intersection @handledKeys(), Object.keys(options)
