@@ -1,6 +1,11 @@
 class SwanKiosk.World
-  constructor: (@dictionary = {}) ->
-  get: ->
-    @dictionary
-  pipe: (next) ->
-    next @get()
+  constructor: (@value = {}) ->
+  call: ->
+    @value
+  pipe: (out) ->
+    out.call this, @value
+    this
+
+class SwanKiosk.Transform extends SwanKiosk.World
+  call: (context, dictionary) ->
+    @value context, dictionary
