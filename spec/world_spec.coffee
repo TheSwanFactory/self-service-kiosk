@@ -20,9 +20,10 @@ describe.only 'SwanKiosk.World', ->
       class:    'centered'
       contents: {key: 'value'}
 
-  it 'call/pipe', ->
-    layout = new SwanKiosk.Transform (world) ->
-      world.value.title = 'layout!'
+  it 'three stage pipe', ->
+    layout = new SwanKiosk.Transform (world, dictionary) ->
+      dictionary.title = 'layout!'
+      dictionary
 
     pipeline = src.pipe(center).pipe(layout)
     result   = pipeline.call()
