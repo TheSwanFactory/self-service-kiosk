@@ -41,6 +41,12 @@ function anyFile(extension) {
   return '/**/*.' + extension;
 }
 
+function prefixDir(dir) {
+  return function(file) {
+    return dir + file;
+  }
+}
+
 // 2. SETTINGS VARIABLES
 // - - - - - - - - - - - - - - -
 
@@ -58,28 +64,31 @@ var sassDir  = srcDir + '/scss',
     sassPaths = [
   sassDir,
   bowerDir + '/foundation-apps/scss',
-  bowerDir + '/font-awesome/scss'
+  bowerDir + '/font-awesome/scss',
+  bowerDir + '/tooltipster/css'
 ];
 // These files include Foundation for Apps and its dependencies
 var vendorJS = [
-  bowerDir + '/fastclick/lib/fastclick.js',
-  bowerDir + '/viewport-units-buggyfill/viewport-units-buggyfill.js',
-  bowerDir + '/tether/tether.js',
-  bowerDir + '/lodash/dist/lodash.min.js',
-  bowerDir + '/jquery/dist/jquery.min.js',
-  bowerDir + '/page/page.js'
-];
+  '/fastclick/lib/fastclick.js',
+  '/viewport-units-buggyfill/viewport-units-buggyfill.js',
+  '/tether/tether.js',
+  '/lodash/dist/lodash.min.js',
+  '/jquery/dist/jquery.min.js',
+  '/tooltipster/js/jquery.tooltipster.min.js',
+  '/page/page.js'
+].map(prefixDir(bowerDir));
+
 
 var appCoffee = [
-  coffeeDir + '/app.coffee',
-  coffeeDir + '/world.coffee',
-  coffeeDir + anyFile('coffee')
-];
+  '/app.coffee',
+  '/world.coffee',
+  anyFile('coffee')
+].map(prefixDir(coffeeDir));
 
 var specCoffee = [
-  specDir + '/spec.coffee',
-  specDir + '/**/*.coffee'
-];
+  '/spec.coffee',
+  '/**/*.coffee'
+].map(prefixDir(specDir));
 
 var staticFiles = [
   srcDir + '/**/*.*',
@@ -113,7 +122,8 @@ gulp.task('sass', function() {
       loadPath: sassPaths,
       style: 'nested',
       bundleExec: true,
-      'sourcemap=none': true
+      'sourcemap=none': true,
+      require: 'sass-css-importer'
     }))
     .on('error', handleError)
     .pipe(autoprefixer({
