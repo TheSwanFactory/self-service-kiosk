@@ -21,6 +21,7 @@ var gulp           = require('gulp'),
     coffee         = require('gulp-coffee'),
     cson           = require('gulp-cson'),
     mochaPhantomJS = require('gulp-mocha-phantomjs'),
+    include        = require('gulp-include'),
     coffeelint;
 
 // devDependencies
@@ -64,8 +65,7 @@ var sassDir  = srcDir + '/scss',
     sassPaths = [
   sassDir,
   bowerDir + '/foundation-apps/scss',
-  bowerDir + '/font-awesome/scss',
-  bowerDir + '/tooltipster/css'
+  bowerDir + '/font-awesome/scss'
 ];
 // These files include Foundation for Apps and its dependencies
 var vendorJS = [
@@ -118,12 +118,12 @@ gulp.task('copy', function() {
 // Compiles Sass
 gulp.task('sass', function() {
   return gulp.src(sassDir + '/app.scss')
+    .pipe(include())
     .pipe(sass({
       loadPath: sassPaths,
       style: 'nested',
       bundleExec: true,
-      'sourcemap=none': true,
-      require: 'sass-css-importer'
+      'sourcemap=none': true
     }))
     .on('error', handleError)
     .pipe(autoprefixer({
