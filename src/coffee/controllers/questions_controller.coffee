@@ -7,30 +7,65 @@ class SwanKiosk.Controllers.QuestionsController extends SwanKiosk.Controller
 
   # Callbacks
 
-  _afterInitialize: ->
-    @store   = new SwanKiosk.Store.LocalStorage
-    @config  = SwanKiosk.Config
+  _beforeAction: ->
+    @setStore()
+    @setConfig()
+    @setQuestions()
+    @setId()
+    @setAnswers()
+    @setQuestion()
+
+  # Helpers
+
+  setStore: ->
+    @store = new SwanKiosk.Store.LocalStorage
+
+  setConfig: ->
+    @config = SwanKiosk.Config
+
+  setId: ->
+    @id = parseInt(@params.id, 10) || @lowIndex
+
+  setQuestions: ->
+    @questions = @config.questions
+
+  setAnswers: ->
     @answers = @store.getObject(@storeKey) || @defaultAnswers()
+
+  setQuestion: ->
+    @question = @questions[@id]
+    return unless @question?
+    @checkPassWhenClause()
+
+  checkPassWhenClause: ->
+    whenClause = @question.when
+    pass = true
+    if whenClause?
+      for key, value of whenClause
+        if @answers[key] != value
+          pass = false
+          break
+    unless pass
+      @id++
+      @setQuestion()
+
 
   # Routes
 
   routes: ['show', 'results']
 
   show: ->
-    @id = parseInt(@params.id, 10) || @lowIndex
-    @questions = @config.questions
-    question = @questions[@id]
-    if question?
-      @questionKey = question.key
+    if @question?
+      @questionKey = @question.key
       @answer = @answers[@questionKey]
-      new SwanKiosk.Interpreters.Question question, @answer
+      new SwanKiosk.Interpreters.Question @question, @answer
     else
       page.redirect '/questions/results'
 
   results: ->
     new SwanKiosk.Interpreters.Results @answers
 
-  # Actions
+  # Page Actions
 
   selectOption: (element, event) ->
     $answer = $ element
