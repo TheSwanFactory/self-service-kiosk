@@ -44,12 +44,6 @@ ul, ol { display: inline-block; }
   }
 
   .question {
-    @include grid-content;
-
-    @include breakpoint(small) {
-      @include grid-size(12);
-    }
-
     @include breakpoint(medium) {
       @include grid-content(
         $size: 6,
@@ -70,9 +64,13 @@ ul, ol { display: inline-block; }
   @include grid-block($orientation: vertical, $wrap: true, $align: center);
 
   .answer {
-    @extend .button;
-    @extend .button.xxlarge;
-    @extend .button.hollow;
+    @include button;
+    @include button-size(xxlarge);
+    @include button-style($style: hollow);
+
+    @include breakpoint(small) {
+      @include button-size(large);
+    }
 
     &.selected {
       @include button-style($style: solid);
