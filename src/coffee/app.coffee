@@ -20,6 +20,7 @@ class SwanKiosk
     page hashbang: true # setup router
     $('.tooltip').tooltipster
       theme: 'tooltipster-light'
+    FastClick.attach document.body
 
 # on page load
 $ SwanKiosk.init
