@@ -1,7 +1,5 @@
 class SwanKiosk.World
-  self = null
   constructor: (@value = {}) ->
-    self = this
   call: ->
     @value
   pipe: (out) ->

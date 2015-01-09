@@ -1,4 +1,4 @@
-describe.only 'SwanKiosk.World', ->
+describe 'SwanKiosk.World', ->
   src    = null
   center = (dictionary) ->
     class:    'centered'
