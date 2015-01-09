@@ -62,19 +62,22 @@
     " # format with Markdown
     select: "Tap Anywhere To Begin"
   }
-  questions: {
-    sex: {
+  questions: [
+    {
+      key: 'sex'
       title: "What is your gender?"
       why: "This helps us better estimate your health risks"
       select: {M: "Male", F: "Female", other: "Other"}
     }
-    dry_eyes: {
+    {
+      key: 'dry_eyes'
       title: "Do you have dry eyes?"
       description: "Do your eyes itch?  Do they have redness?"
       why: "This helps us better estimate your health risks"
       select: {yes: "Yes", no: "No", other: "Not Sure"}
     }
-    dry_eyes_duration: {
+    {
+      key: 'dry_eyes_duration'
       when: {dry_eyes: 'yes'}
       title: "How long have you had dry eyes?"
       description: "Do your eyes itch?  Do they have redness?"
@@ -86,6 +89,5 @@
         other: "Not sure"
       }
     }
-  # result = {sex: 'M', dry_yes: 'yes', dry_eyes_duration: 'm12'}
-  }
+  ]
 }

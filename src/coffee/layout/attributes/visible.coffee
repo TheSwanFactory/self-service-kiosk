@@ -1,7 +1,8 @@
-SwanKiosk.Layout.handledAttributes.visible = (expression, element, dictionary) ->
+utils = SwanKiosk.Utils
+
+SwanKiosk.Layout.handle 'visible', (expression, element, dictionary) ->
   dictionary.style ?= {}
-  expression = eval expression
-  expression = expression.call(this) if typeof expression == 'function'
+  expression = utils.getFunction expression, this, true
   unless expression
     dictionary.style.display = 'none'
     SwanKiosk.Layout.handleAttribute 'style', element, dictionary

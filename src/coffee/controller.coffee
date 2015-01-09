@@ -5,7 +5,7 @@ class SwanKiosk.Controller
   layout:        false
 
   constructor: (@params = {}) ->
-    @_afterInitialize()
+    @_afterInitialize() if @_afterInitialize?
 
   # Callbacks
 
@@ -26,6 +26,7 @@ class SwanKiosk.Controller
     else
       throw new Error "No route found for #{@constructor.name}##{action}"
 
+    @_beforeAction() if @_beforeAction?
     @_render action.call(this)
 
   _getRoute: (route) ->

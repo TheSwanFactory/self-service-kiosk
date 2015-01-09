@@ -40,7 +40,7 @@ class SwanKiosk.Interpreters.Question extends SwanKiosk.Interpreter
   interpretNavigation: ->
     prevOptions =
       class:   'previous'
-      visible: 'this.hasPreviousQuestion'
+      visible: 'hasPreviousQuestion'
       events:
         click: 'prevQuestion'
     nextOptions =
