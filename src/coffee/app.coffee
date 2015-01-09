@@ -18,6 +18,7 @@ class SwanKiosk
 
   @init: ->
     page hashbang: true # setup router
+    $('.tooltip').tooltipster()
 
 # on page load
 $ SwanKiosk.init

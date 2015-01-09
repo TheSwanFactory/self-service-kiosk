@@ -27,7 +27,11 @@ class SwanKiosk.Interpreters.Question extends SwanKiosk.Interpreter
       contents: {tag: 'h1', contents: @dictionary.title}
     }, SwanKiosk.Components.verticalCenter({
       class:    'why-wrapper',
-      contents: {tag: 'a', class: 'why', contents: @why, title: @dictionary.why}
+      contents:
+        tag:      'a'
+        class:    'why tooltip'
+        contents: @why
+        title:    @dictionary.why
     })]
 
   interpretBody: ->
