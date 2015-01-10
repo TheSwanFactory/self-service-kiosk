@@ -24,10 +24,14 @@ class SwanKiosk.Interpreters.Question extends SwanKiosk.Interpreter
     class:    'header'
     contents: [{
       class: 'question'
-      contents: {tag: 'h1', contents: @dictionary.title}
+      contents: {tag: 'h2', contents: @dictionary.title}
     }, SwanKiosk.Components.verticalCenter({
       class:    'why-wrapper',
-      contents: {tag: 'a', class: 'why', contents: @why, title: @dictionary.why}
+      contents:
+        tag:      'span'
+        class:    'why tooltip'
+        contents: @why
+        title:    @dictionary.why
     })]
 
   interpretBody: ->

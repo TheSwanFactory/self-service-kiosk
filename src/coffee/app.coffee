@@ -16,8 +16,13 @@ class SwanKiosk
   @singleton: (klass, args) ->
     _instances[klass.name] ?= @create(klass, args)
 
-  @init: ->
+  @init: =>
     page hashbang: true # setup router
+    FastClick.attach document.body
+
+  @pageLoad: (ctx, next) ->
+    $('.tooltip').tooltipster
+      theme: 'tooltipster-light'
 
 # on page load
 $ SwanKiosk.init

@@ -21,6 +21,7 @@ var gulp           = require('gulp'),
     coffee         = require('gulp-coffee'),
     cson           = require('gulp-cson'),
     mochaPhantomJS = require('gulp-mocha-phantomjs'),
+    include        = require('gulp-include'),
     coffeelint;
 
 // devDependencies
@@ -39,6 +40,12 @@ function anyFile(extension) {
   }
 
   return '/**/*.' + extension;
+}
+
+function prefixDir(dir) {
+  return function(file) {
+    return dir + file;
+  }
 }
 
 // 2. SETTINGS VARIABLES
@@ -62,24 +69,26 @@ var sassDir  = srcDir + '/scss',
 ];
 // These files include Foundation for Apps and its dependencies
 var vendorJS = [
-  bowerDir + '/fastclick/lib/fastclick.js',
-  bowerDir + '/viewport-units-buggyfill/viewport-units-buggyfill.js',
-  bowerDir + '/tether/tether.js',
-  bowerDir + '/lodash/dist/lodash.min.js',
-  bowerDir + '/jquery/dist/jquery.min.js',
-  bowerDir + '/page/page.js'
-];
+  '/fastclick/lib/fastclick.js',
+  '/viewport-units-buggyfill/viewport-units-buggyfill.js',
+  '/tether/tether.js',
+  '/lodash/dist/lodash.min.js',
+  '/jquery/dist/jquery.min.js',
+  '/tooltipster/js/jquery.tooltipster.min.js',
+  '/page/page.js'
+].map(prefixDir(bowerDir));
+
 
 var appCoffee = [
-  coffeeDir + '/app.coffee',
-  coffeeDir + '/world.coffee',
-  coffeeDir + anyFile('coffee')
-];
+  '/app.coffee',
+  '/world.coffee',
+  anyFile('coffee')
+].map(prefixDir(coffeeDir));
 
 var specCoffee = [
-  specDir + '/spec.coffee',
-  specDir + '/**/*.coffee'
-];
+  '/spec.coffee',
+  '/**/*.coffee'
+].map(prefixDir(specDir));
 
 var staticFiles = [
   srcDir + '/**/*.*',
@@ -109,6 +118,7 @@ gulp.task('copy', function() {
 // Compiles Sass
 gulp.task('sass', function() {
   return gulp.src(sassDir + '/app.scss')
+    .pipe(include())
     .pipe(sass({
       loadPath: sassPaths,
       style: 'nested',
