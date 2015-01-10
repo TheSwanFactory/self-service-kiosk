@@ -12,7 +12,7 @@ describe 'Question to HTML', ->
   it 'builds header', ->
     header = fixtureDiv.find('.header')
     expect(header.length).to.not.eq 0
-    expect(header.find('h1').text()).to.eq question.title
+    expect(header.find('.question > *').text()).to.eq question.title
 
   it 'builds body', ->
     body = fixtureDiv.find('.body')
