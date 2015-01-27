@@ -1,3 +1,9 @@
+###
+SwanKiosk.Layout
+
+build HTMLElements (with inline CSS styles and event listeners) from javascript dictionaries
+###
+
 class SwanKiosk.Layout
   @defaultTag        = 'div'
   @specialAttributes = ['contents', 'tag', 'rawHtml', '_context']
